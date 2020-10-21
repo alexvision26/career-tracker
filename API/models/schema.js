@@ -1,19 +1,14 @@
 const mongoose = require('mongoose');
 
-const jobSchema = mongoose.Schema({
+const activitySchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     created: { type: Date, default: Date.now },
     author: { type: String, required: true },
     authorId: { type: String, required: true },
-    jobTitle: { type: String, required: true },
-    company: { type: String, required: true },
-    desc: {type: String, required: true },
-    Location: String,
-    postUrl: String,
-    status: String,
-    deadline: Date,
 
-    contacts: Array
+    title: { type: String, required: true },
+    actions: Array,
+
 })
 
 const contactSchema = mongoose.Schema({
@@ -28,18 +23,23 @@ const contactSchema = mongoose.Schema({
     role: String,
     company: String,
 
-    actions: Array,
+    actions: [activitySchema],
 })
 
-const activitySchema = mongoose.Schema({
+const jobSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     created: { type: Date, default: Date.now },
     author: { type: String, required: true },
     authorId: { type: String, required: true },
+    jobTitle: { type: String, required: true },
+    company: { type: String, required: true },
+    desc: {type: String, required: true },
+    location: String,
+    postUrl: String,
+    status: String,
+    deadline: Date,
 
-    title: { type: String, required: true },
-    actions: Array,
-
+    contacts: [contactSchema]
 })
 
 const userSchema = mongoose.Schema({

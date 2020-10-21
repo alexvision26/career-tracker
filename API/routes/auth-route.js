@@ -20,7 +20,7 @@ router.post('/register', validateUserContent, (req, res) => {
 
     user.save().then(result => {
         console.log(result)
-        res.status(201).json({ message: "Account successfully created. Email: "+ result.email + "Name: " + result.name })
+        res.status(201).json({ message: "Account successfully created." })
     }).catch(err => {
         console.log(err)
         res.status(500).json({ error: "There was an error creating account. Please try again." })
