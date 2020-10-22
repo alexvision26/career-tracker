@@ -6,10 +6,11 @@ router.get('/', (req, res) => {
     res.status(200).json({ api: "Jobs router working "})
 })
 
+// ADD A NEW JOB CARD
 router.post("/", (req, res) => {
     const job = new Job({
-        author: req.body.author,
-        authorId: req.body.authorId,
+        _id: new mongoose.Types.ObjectId,
+        authorEmail: req.body.authorEmail,
         jobTitle: req.body.jobTitle,
         company: req.body.company,
         desc: req.body.desc,
@@ -19,11 +20,13 @@ router.post("/", (req, res) => {
         deadline: req.body.deadline
     })
 
-    job.save().then(result => {
-        console.log(result)
-        res.status(201).json({ message: "Job card successfully added." })
+    const query = { email: req.body.authorEmail }
+
+    User.updateOne(query, { $push: { jobs: job }}).then(result => {
+        // console.log(result)
+        res.status(201).json({ message: "Successfull added a job card!" })
     }).catch(err => {
-        console.log(err)
+        // console.log(err)
         res.status(500).json(err)
     })
 })

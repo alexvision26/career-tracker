@@ -38,6 +38,7 @@ router.post("/login", validateUserContent, (req, res) => {
 
             res.status(200).json({
                 message: `Welcome ${result.name}!`,
+                id: result._id,
                 token
             });
         } else {

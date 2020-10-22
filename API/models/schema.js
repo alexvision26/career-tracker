@@ -29,8 +29,7 @@ const contactSchema = mongoose.Schema({
 const jobSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     created: { type: Date, default: Date.now },
-    author: { type: String, required: true },
-    authorId: { type: String, required: true },
+    authorEmail: { type: String, required: true },
     jobTitle: { type: String, required: true },
     company: { type: String, required: true },
     desc: {type: String, required: true },
@@ -39,7 +38,7 @@ const jobSchema = mongoose.Schema({
     status: String,
     deadline: Date,
 
-    contacts: [contactSchema]
+    // contacts: [contactSchema]
 })
 
 const userSchema = mongoose.Schema({
@@ -57,9 +56,9 @@ const userSchema = mongoose.Schema({
 })
 
 const User = mongoose.model("User", userSchema)
-const Job = mongoose.model("Job", userSchema)
-const Contact = mongoose.model("Contact", userSchema)
-const Activity = mongoose.model("Activity", userSchema)
+const Job = mongoose.model("Job", jobSchema)
+const Contact = mongoose.model("Contact", contactSchema)
+const Activity = mongoose.model("Activity", activitySchema)
 
 module.exports = {
     User: User,
