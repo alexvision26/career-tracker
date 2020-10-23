@@ -31,4 +31,45 @@ router.post("/", (req, res) => {
     })
 })
 
+// EDIT A JOB CARD
+router.put("/:id", (req, res) => {
+    const id = req.params.id;
+    const jobId = req.body._id
+
+    User.findOne({ _id: id }).then(doc => {
+        const theJob = doc.jobs.filter(job => {
+            return job._id.toString() === jobId
+        })
+        theJob[0].set(req.body)
+        doc.save().then(result => {
+            res.status(200).json({ message: "Successfully edited job." })
+        }).catch(err => {
+            console.log(err)
+            res.status(500).json({ message: "Error updating job." })
+        })
+    })
+
+})
+
+// DELETE A JOB CARD
+router.delete("/:id", (req, res) => {
+    const id = req.params.id;
+    const jobId = req.body._id;
+
+    User.findOne({ _id: id }).then(doc => {
+        // console.log(doc)
+        const theJob = doc.jobs.filter(job => {
+            return job._id.toString() === jobId
+        })
+        theJob[0].remove();
+
+        doc.save().then(result => {
+            res.status(200).json({ message: "Successfully deleted job." })
+        }).catch(err => {
+            console.log(err)
+            res.status(500).json({ message: "Error deleting job." })
+        })
+    })
+})
+
 module.exports = router;
