@@ -20,7 +20,7 @@ router.post('/register', validateUserContent, (req, res) => {
 
     user.save().then(result => {
         console.log(result)
-        res.status(201).json({ message: "Account successfully created. Email: "+ result.email + "Name: " + result.name })
+        res.status(201).json({ message: "Account successfully created." })
     }).catch(err => {
         console.log(err)
         res.status(500).json({ error: "There was an error creating account. Please try again." })
@@ -38,6 +38,7 @@ router.post("/login", validateUserContent, (req, res) => {
 
             res.status(200).json({
                 message: `Welcome ${result.name}!`,
+                id: result._id,
                 token
             });
         } else {
@@ -47,6 +48,43 @@ router.post("/login", validateUserContent, (req, res) => {
         console.log(err)
         res.status(500).json(err)
     })
+})
+
+// EDIT ACCOUNT DETAILS
+
+router.put("/:id", (req, res) => {
+  const id = req.params.id
+
+  User.findOneAndUpdate({ _id: id }, req.body).then(doc => {
+    res.status(200).json({ message: "Account updated successfully. "})
+  }).catch(err => {
+    res.status(500).json({ error: err })
+  })
+})
+
+// DELETE ACCOUNT
+// MUST SEND EMAIL & PASS TO DELETE ACCOUNT
+
+router.delete("/:id", validateUserContent, (req, res) => {
+  const id = req.params.id
+  let { email, password } = req.body;
+
+  User.findOne({ email: email }).then(result => {
+    if (result && bcrypt.compareSync(password, result.password)) {
+
+      User.findOneAndDelete({ _id: id }).then(result => {
+        console.log(result)
+        res.status(201).json({ message: "Account deleted." })
+      }).catch(err => {
+        res.status(500).json({ error: err })
+      })
+    } else {
+      res.status(401).json({ error: "Invalid credentials." })
+    }
+  }).catch(err => {
+    res.status(500).json({ error: "Error finding user." })
+  })
+
 })
 
 // ---------------------- Generate Token ---------------------- //
