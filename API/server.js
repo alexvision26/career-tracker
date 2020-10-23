@@ -23,6 +23,7 @@ const server = express();
 server.use(helmet());
 server.use(express.json());
 server.use(cors());
+mongoose.set('useFindAndModify', false);
 
 server.use("/api/auth", authRouter)
 // server.use("/api/users", restricted, usersRouter)
