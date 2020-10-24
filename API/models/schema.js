@@ -38,7 +38,7 @@ const jobSchema = mongoose.Schema({
     status: String,
     deadline: Date,
 
-    // contacts: [contactSchema]
+    contacts: [contactSchema]
 })
 
 const userSchema = mongoose.Schema({

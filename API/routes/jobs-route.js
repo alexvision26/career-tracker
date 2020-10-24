@@ -2,8 +2,44 @@ const router = require("express").Router();
 const mongoose = require("mongoose");
 const { User, Job } = require("../models/schema");
 
-router.get('/', (req, res) => {
-    res.status(200).json({ api: "Jobs router working "})
+/*------------------IMPORTANT------------------------ */
+// Job requests must contain user's ID in request to connect data to account
+// Editing or deleting jobs must have BOTH User ID and Job ID
+
+// Although POST request to create new Job only requires the Email from the account sent in the body
+
+
+/*------------------END POINTS------------------------ */
+
+// GET ALL JOBS BY USER
+
+router.get("/:id", (req, res) => {
+    const id = req.params.id;
+
+    User.findOne({ _id: id }).then(doc => {
+        res.status(200).json({
+            jobs: doc.jobs
+        })
+    }).catch(err => {
+        res.status(500).json({ message: "Error retrieving jobs.", error: err })
+    })
+})
+
+// GET SINGLE JOB
+router.get("/:id/job", (req, res) => {
+    const id = req.params.id;
+    const jobId = req.body._id
+
+    User.findOne({ _id: id }).then(doc => {
+        const theJob = doc.jobs.filter(job => {
+            return job._id.toString() === jobId
+        })
+        res.status(200).json({
+            job: theJob[0]
+        })
+    }).catch(err => {
+        res.status(500).json({ message: "Error retrieving job.", error: err })
+    })
 })
 
 // ADD A NEW JOB CARD

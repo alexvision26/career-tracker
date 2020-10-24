@@ -50,6 +50,23 @@ router.post("/login", validateUserContent, (req, res) => {
     })
 })
 
+// GET ACCOUNT INFO
+
+router.get("/:id", (req, res) => {
+  const id = req.params.id;
+
+  User.findOne({ _id: id }).then(doc => {
+    res.status(200).json({ user: {
+      name: doc.name,
+      email: doc.email,
+      industry: doc.industry,
+      created: doc.created.toDateString()
+    } })
+  }).catch(err => {
+    res.status(500).json(err)
+  })
+})
+
 // EDIT ACCOUNT DETAILS
 
 router.put("/:id", (req, res) => {
