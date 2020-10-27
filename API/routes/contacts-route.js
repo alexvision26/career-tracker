@@ -1,56 +1,112 @@
 const router = require("express").Router();
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const { jwtSecret } = require("../../config/secrets");
 const mongoose = require("mongoose");
-const { User } = require("../models/schema");
-
-//Test route...
-router.get("/", (req, res) => {
-    res.status(200).json({ message: "Contacts route working..." })
-})
-
+const { User, Contact } = require("../models/schema");
 
 // CREATE NEW CONTACT ON EXISTING JOB
 
 router.post("/", (req, res) => {
-    // ID of Job AND User must be passed in the Request Body to save Contact to Job and User. This will save contact info even if Job is deleted.
-    // Contact needs to also be attached to the User under Contacts array, doesn't need to point to job exactly, should just reference company
-    // If job is deleted, the contact should stay under the User's Contacts array as a subdocument
+    const contact = new Contact({
+        _id: new mongoose.Types.ObjectId,
+        authorId: req.body.authorId,
+        name: req.body.name,
+        phone: req.body.phone,
+        email: req.body.email,
+        role: req.body.role,
+        company: req.body.company,
+    })
+
+    const query = { _id: req.body.authorId }
+
+    User.updateOne(query, { $push: { contacts: contact }}).then(result => {
+        console.log(result)
+        res.status(201).json({ message: "Contact added successfully!" })
+    }).catch(err => {
+        console.log(err)
+        res.status(500).json({ error: err })
+    })
 })
 
 // RETRIEVE ALL CONTACTS IN RECORD BOOK
 
 router.get("/:id", (req, res) => {
+    const id = req.params.id;
 
+    User.findOne({ _id: id }).then(doc => {
+        res.status(200).json(doc.contacts)
+    }).catch(err => {
+        res.status(500).json(err)
+    })
 })
 
 // RETRIEVE ALL CONTACTS FROM JOB
 
 router.get("/:id/job", (req, res) => {
     const id = req.params.id;
-    const jobId = req.body._id
 
     //Needs to pull all contacts from a Job post.
+    User.findOne({ _id: id }).then(doc => {
+        // console.log(doc)
+        const matchContacts = doc.contacts.filter(el => {
+            return el.company.toUpperCase() === req.body.company.toUpperCase()
+        })
+        console.log(matchContacts)
+        res.status(200).json(matchContacts)
+    }).catch(err => res.status(500).json(err))
 })
 
 // RETRIEVE SINGLE CONTACT
 
 router.get("/:id/info", (req, res) => {
-    // Should pull this information from Record book. Can be the same request as pulling one contact from list of contacts under a single job
+    const id = req.params.id;
+    const contactId = req.body._id;
+
+    User.findOne({ _id: id }).then(doc => {
+        const matchContact = doc.contacts.filter(el => {
+            return el._id.toString() === contactId
+        })
+        res.status(200).json(matchContact)
+    }).catch(err => res.status(500).json(err))
 })
 
 // EDIT CONTACT INFORMATION
 
 router.put("/:id", (req, res) => {
-    // ID Param must be User ID. ID Param of job must also be passed in REQUEST body to update record.
-    // This needs to simultaneously update the JOB->CONTACT record and also the USER->CONTACT record.
-    // Same ops for deleting a record.
+    const id = req.params.id;
+    const contactId = req.body._id;
+
+    User.findOne({ _id: id }).then(doc => {
+        const matchContact = doc.contacts.filter(el => {
+            return el._id.toString() === contactId
+        })
+        matchContact[0].set(req.body)
+        doc.save().then(result => {
+            res.status(200).json({ message: "Successfully edited job.", res: result })
+        }).catch(err => {
+            // console.log(err)
+            res.status(500).json({ message: "Error editing contact." })
+        })
+    }).catch(err => res.status(500).json(err))
 })
 
 // DELETE CONTACT INFORMATION (NEEDS TO DELETE ON JOB-CONTACT AND USER->CONTACT)
 
 router.delete("/:id", (req, res) => {
-    // Same as PUT... See above.
+    const id = req.params.id;
+    const contactId = req.body._id;
+
+    User.findOne({ _id: id }).then(doc => {
+        const matchContact = doc.contacts.filter(el => {
+            return el._id.toString() === contactId
+        })
+        matchContact[0].remove();
+
+        doc.save().then(result => {
+            res.status(200).json({ message: "Successfully deleted contact." })
+        }).catch(err => {
+            // console.log(err)
+            res.status(500).json({ message: "Error deleting contact." })
+        })
+    })
 })
 
+module.exports = router

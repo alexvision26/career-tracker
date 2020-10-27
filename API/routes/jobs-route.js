@@ -46,7 +46,7 @@ router.get("/:id/job", (req, res) => {
 router.post("/", (req, res) => {
     const job = new Job({
         _id: new mongoose.Types.ObjectId,
-        authorEmail: req.body.authorEmail,
+        authorId: req.body.authorId,
         jobTitle: req.body.jobTitle,
         company: req.body.company,
         desc: req.body.desc,
@@ -56,7 +56,7 @@ router.post("/", (req, res) => {
         deadline: req.body.deadline
     })
 
-    const query = { email: req.body.authorEmail }
+    const query = { _id: req.body.authorId }
 
     User.updateOne(query, { $push: { jobs: job }}).then(result => {
         // console.log(result)
@@ -80,11 +80,10 @@ router.put("/:id", (req, res) => {
         doc.save().then(result => {
             res.status(200).json({ message: "Successfully edited job." })
         }).catch(err => {
-            console.log(err)
+            // console.log(err)
             res.status(500).json({ message: "Error updating job." })
         })
     })
-
 })
 
 // DELETE A JOB CARD
@@ -102,7 +101,7 @@ router.delete("/:id", (req, res) => {
         doc.save().then(result => {
             res.status(200).json({ message: "Successfully deleted job." })
         }).catch(err => {
-            console.log(err)
+            // console.log(err)
             res.status(500).json({ message: "Error deleting job." })
         })
     })

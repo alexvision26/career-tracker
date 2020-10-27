@@ -14,9 +14,7 @@ const activitySchema = mongoose.Schema({
 const contactSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     created: { type: Date, default: Date.now },
-    author: { type: String, required: true },
     authorId: { type: String, required: true },
-
     name: { type: String, required: true },
     phone: Number,
     email: String,
@@ -29,7 +27,7 @@ const contactSchema = mongoose.Schema({
 const jobSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     created: { type: Date, default: Date.now },
-    authorEmail: { type: String, required: true },
+    authorId: { type: String, required: true },
     jobTitle: { type: String, required: true },
     company: { type: String, required: true },
     desc: {type: String, required: true },
