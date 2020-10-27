@@ -2,14 +2,11 @@ const router = require("express").Router();
 const mongoose = require("mongoose");
 const { User, Job } = require("../models/schema");
 
-/*------------------IMPORTANT------------------------ */
-// Job requests must contain user's ID in request to connect data to account
-// Editing or deleting jobs must have BOTH User ID and Job ID
-
-// Although POST request to create new Job only requires the Email from the account sent in the body
-
-
 /*------------------END POINTS------------------------ */
+
+router.get("/", (req, res) => {
+    res.status(200).json({ api: "Jobs route with JWT working." })
+})
 
 // GET ALL JOBS BY USER
 

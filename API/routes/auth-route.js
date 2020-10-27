@@ -34,6 +34,7 @@ router.post("/login", validateUserContent, (req, res) => {
 
     User.findOne({ email: email }).then(result => {
         if (result && bcrypt.compareSync(password, result.password)) {
+            console.log(result)
             const token = generateToken(result)
 
             res.status(200).json({
@@ -67,55 +68,18 @@ router.get("/:id", (req, res) => {
   })
 })
 
-// EDIT ACCOUNT DETAILS
-
-router.put("/:id", (req, res) => {
-  const id = req.params.id
-
-  User.findOneAndUpdate({ _id: id }, req.body).then(doc => {
-    res.status(200).json({ message: "Account updated successfully. "})
-  }).catch(err => {
-    res.status(500).json({ error: err })
-  })
-})
-
-// DELETE ACCOUNT
-// MUST SEND EMAIL & PASS TO DELETE ACCOUNT
-
-router.delete("/:id", validateUserContent, (req, res) => {
-  const id = req.params.id
-  let { email, password } = req.body;
-
-  User.findOne({ email: email }).then(result => {
-    if (result && bcrypt.compareSync(password, result.password)) {
-
-      User.findOneAndDelete({ _id: id }).then(result => {
-        console.log(result)
-        res.status(201).json({ message: "Account deleted." })
-      }).catch(err => {
-        res.status(500).json({ error: err })
-      })
-    } else {
-      res.status(401).json({ error: "Invalid credentials." })
-    }
-  }).catch(err => {
-    res.status(500).json({ error: "Error finding user." })
-  })
-
-})
-
 // ---------------------- Generate Token ---------------------- //
 
 function generateToken(user) {
     const payload = {
-      subject: user.id, // standard claim = sub
-      username: user.username,
-      // role: user.role || "user"  (optional: if there's role in db schema)
+      sub: user._id, // standard claim = sub
+      username: user.email,
     };
     const options = {
-      expiresIn: "7d",
+      algorithm: "HS256",
+      expiresIn: "7d"
     };
-    return jwt.sign(payload, jwtSecret, options);
+    return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, options);
   }
 
   // ---------------------- Custom Middleware ---------------------- //
