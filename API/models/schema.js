@@ -16,7 +16,7 @@ const contactSchema = mongoose.Schema({
     created: { type: Date, default: Date.now },
     authorId: { type: String, required: true },
     name: { type: String, required: true },
-    phone: Number,
+    phone: String,
     email: String,
     role: String,
     company: String,

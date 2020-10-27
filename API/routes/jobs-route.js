@@ -73,11 +73,12 @@ router.put("/:id", (req, res) => {
         const theJob = doc.jobs.filter(job => {
             return job._id.toString() === jobId
         })
+        console.log(theJob)
         theJob[0].set(req.body)
         doc.save().then(result => {
             res.status(200).json({ message: "Successfully edited job." })
         }).catch(err => {
-            // console.log(err)
+            console.log(err)
             res.status(500).json({ message: "Error updating job." })
         })
     })

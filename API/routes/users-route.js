@@ -1,19 +1,11 @@
 const router = require("express").Router();
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const { jwtSecret } = require("../../config/secrets");
-const mongoose = require("mongoose");
 const { User } = require("../models/schema");
-
-router.get('/', (req, res) => {
-    res.status(200).json({ api: "Users router working "})
-})
 
 // EDIT ACCOUNT DETAILS
 
 router.put("/:id", (req, res) => {
     const id = req.params.id
-
     delete req.body.email
   
     User.findOneAndUpdate({ _id: id }, req.body).then(doc => {
