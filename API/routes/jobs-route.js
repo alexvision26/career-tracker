@@ -2,15 +2,48 @@ const router = require("express").Router();
 const mongoose = require("mongoose");
 const { User, Job } = require("../models/schema");
 
-router.get('/', (req, res) => {
-    res.status(200).json({ api: "Jobs router working "})
+/*------------------END POINTS------------------------ */
+
+router.get("/", (req, res) => {
+    res.status(200).json({ api: "Jobs route with JWT working." })
+})
+
+// GET ALL JOBS BY USER
+
+router.get("/:id", (req, res) => {
+    const id = req.params.id;
+
+    User.findOne({ _id: id }).then(doc => {
+        res.status(200).json({
+            jobs: doc.jobs
+        })
+    }).catch(err => {
+        res.status(500).json({ message: "Error retrieving jobs.", error: err })
+    })
+})
+
+// GET SINGLE JOB
+router.get("/:id/job", (req, res) => {
+    const id = req.params.id;
+    const jobId = req.body._id
+
+    User.findOne({ _id: id }).then(doc => {
+        const theJob = doc.jobs.filter(job => {
+            return job._id.toString() === jobId
+        })
+        res.status(200).json({
+            job: theJob[0]
+        })
+    }).catch(err => {
+        res.status(500).json({ message: "Error retrieving job.", error: err })
+    })
 })
 
 // ADD A NEW JOB CARD
 router.post("/", (req, res) => {
     const job = new Job({
         _id: new mongoose.Types.ObjectId,
-        authorEmail: req.body.authorEmail,
+        authorId: req.body.authorId,
         jobTitle: req.body.jobTitle,
         company: req.body.company,
         desc: req.body.desc,
@@ -20,7 +53,7 @@ router.post("/", (req, res) => {
         deadline: req.body.deadline
     })
 
-    const query = { email: req.body.authorEmail }
+    const query = { _id: req.body.authorId }
 
     User.updateOne(query, { $push: { jobs: job }}).then(result => {
         // console.log(result)
@@ -44,11 +77,10 @@ router.put("/:id", (req, res) => {
         doc.save().then(result => {
             res.status(200).json({ message: "Successfully edited job." })
         }).catch(err => {
-            console.log(err)
+            // console.log(err)
             res.status(500).json({ message: "Error updating job." })
         })
     })
-
 })
 
 // DELETE A JOB CARD
@@ -66,7 +98,7 @@ router.delete("/:id", (req, res) => {
         doc.save().then(result => {
             res.status(200).json({ message: "Successfully deleted job." })
         }).catch(err => {
-            console.log(err)
+            // console.log(err)
             res.status(500).json({ message: "Error deleting job." })
         })
     })
