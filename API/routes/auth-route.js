@@ -12,7 +12,8 @@ router.post('/register', validateUserContent, (req, res) => {
         _id: new mongoose.Types.ObjectId,
         email: req.body.email,
         password: req.body.password,
-        name: req.body.name,
+        fname: req.body.fname,
+        lname: req.body.lname,
         industry: req.body.industry,
     })
     const hash = bcrypt.hashSync(user.password, 10);
@@ -58,7 +59,8 @@ router.get("/:id", (req, res) => {
 
   User.findOne({ _id: id }).then(doc => {
     res.status(200).json({ user: {
-      name: doc.name,
+      fname: doc.fname,
+      lname: doc.lname,
       email: doc.email,
       industry: doc.industry,
       created: doc.created.toDateString()
