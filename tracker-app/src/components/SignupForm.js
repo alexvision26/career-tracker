@@ -1,28 +1,15 @@
-import React from 'react';
-import Avatar from '@material-ui/core/Avatar';
+import React, { useState } from 'react';
+import { theme } from "../styles/theme";
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-// import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles, withTheme } from '@material-ui/core/styles';
+import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="#">
-        Tracker.io
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import axios from 'axios';
+// import { sign } from 'jsonwebtoken';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -35,13 +22,13 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     alignItems: 'center',
   },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
   form: {
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(3),
+  },
+  field: {
+    outlineColor: '#7000ff',
+    color: 'red',
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
@@ -56,24 +43,61 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
 export default function SignUpForm() {
-  const classes = useStyles();
+  const classes = useStyles(theme);
+
+  const [signup, setSignup] = useState({
+    fname: "",
+    lname: "",
+    email: "",
+    password: "",
+  })
+
+  const handleInput = (info) => {
+    setSignup({
+      ...signup,
+      [info.target.name]: info.target.value
+    });
+  }
+
+  const handleSubmit = (e) => {
+    axios.post("http://localhost:5000/api/auth/register", signup, { headers: { "Accept": "application/json" } }).then(res => {
+      console.log(res)
+    }).catch(err => {
+      console.log(err)
+    })
+    e.preventDefault()
+    setSignup({
+      fname: "",
+      lname: "",
+      email: "",
+      password: "",
+    })
+    cancelCourse();
+  }
+
+  const cancelCourse = () => { 
+    document.getElementById("register-user-form").reset();
+  }
 
   return (
+    <ThemeProvider theme={theme}>
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} onSubmit={handleSubmit} id="register-user-form" noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
                 autoComplete="fname"
-                name="firstName"
+                name="fname"
                 variant="outlined"
                 required
                 fullWidth
-                id="firstName"
+                id="fname"
                 label="First Name"
+                onChange={handleInput}
                 autoFocus
               />
             </Grid>
@@ -82,9 +106,10 @@ export default function SignUpForm() {
                 variant="outlined"
                 required
                 fullWidth
-                id="lastName"
+                id="lname"
                 label="Last Name"
-                name="lastName"
+                name="lname"
+                onChange={handleInput}
                 autoComplete="lname"
               />
             </Grid>
@@ -96,6 +121,7 @@ export default function SignUpForm() {
                 id="email"
                 label="Email Address"
                 name="email"
+                onChange={handleInput}
                 autoComplete="email"
               />
             </Grid>
@@ -107,6 +133,7 @@ export default function SignUpForm() {
                 name="password"
                 label="Password"
                 type="password"
+                onChange={handleInput}
                 id="password"
                 autoComplete="current-password"
               />
@@ -116,7 +143,7 @@ export default function SignUpForm() {
             type="submit"
             fullWidth
             variant="contained"
-            // color="primary"
+            color="primary"
             className={classes.submit}
           >
             Sign Up
@@ -134,5 +161,6 @@ export default function SignUpForm() {
         <Copyright />
       </Box> */}
     </Container>
+    </ThemeProvider>
   );
 }
