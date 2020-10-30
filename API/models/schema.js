@@ -44,7 +44,8 @@ const userSchema = mongoose.Schema({
     email: { type: String, unique: true, required: true },
     password: { type: String, required: true },
     created: { type: Date, default: Date.now },
-    name: { type: String, required: true },
+    fname: { type: String, required: true },
+    lname: { type: String, required: true },
     industry: String,
 
     //Nested subdocuments attached to each user. Need to contain the ID of the user that created them
