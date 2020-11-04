@@ -1,0 +1,43 @@
+@import "./variables.scss";
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 100vh;
+  background-color: $base_color;
+
+  .login-content {
+    border-radius: 7px;
+    box-shadow: 2px 4px 5px rgba(0, 0, 0, 0.24);
+    padding: 3%;
+    background-color: white;
+  }
+
+  .form-title {
+    text-align: center;
+    position: absolute;
+    font-size: 4.5rem;
+    font-weight: 900;
+    font-family: $base-font;
+    letter-spacing: 0.1rem;
+    color: white;
+    margin: 0;
+
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    top: 13%;
+    text-align: center;
+  }
+
+  h3 {
+    text-align: center;
+    padding: 15px 0 45px;
+    margin: 0;
+    font-size: 2.9rem;
+  }
+}

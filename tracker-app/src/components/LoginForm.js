@@ -6,12 +6,10 @@ import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
-
 import Container from '@material-ui/core/Container';
+import axios from 'axios';
 
 import { useHistory } from 'react-router-dom';
-
-import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -45,78 +43,48 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignUpForm(props) {
+
+export default function LoginForm() {
   const classes = useStyles(theme);
   const history = useHistory();
 
-  const [signup, setSignup] = useState({
-    fname: "",
-    lname: "",
+  const [login, setLogin] = useState({
     email: "",
     password: "",
   })
 
   const handleInput = (info) => {
-    setSignup({
-      ...signup,
+    setLogin({
+      ...login,
       [info.target.name]: info.target.value
     });
   }
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    axios.post("http://localhost:5000/api/auth/register", signup, { headers: { "Accept": "application/json" } }).then(res => {
-      setSignup({
-        fname: "",
-        lname: "",
-        email: "",
-        password: "",
-      })
-      cancelCourse();
-      history.push("/login")
-      props.handleClick()
+    axios.post("http://localhost:5000/api/auth/login", login, { headers: { "Accept": "application/json" } }).then(res => {
+      console.log(res)
     }).catch(err => {
       console.log(err)
     })
+    e.preventDefault()
+    setLogin({
+      email: "",
+      password: "",
+    })
+    cancelCourse();
   }
 
   const cancelCourse = () => { 
-    document.getElementById("register-user-form").reset();
+    document.getElementById("login-user-form").reset();
   }
 
   return (
     <ThemeProvider theme={theme}>
-
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        <form className={classes.form} onSubmit={handleSubmit} id="register-user-form" noValidate>
+        <form className={classes.form} onSubmit={handleSubmit} id="login-user-form" noValidate>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                autoComplete="fname"
-                name="fname"
-                variant="outlined"
-                required
-                fullWidth
-                id="fname"
-                label="First Name"
-                onChange={handleInput}
-                autoFocus
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="lname"
-                label="Last Name"
-                name="lname"
-                onChange={handleInput}
-                autoComplete="lname"
-              />
-            </Grid>
             <Grid item xs={12}>
               <TextField
                 variant="outlined"
@@ -151,20 +119,24 @@ export default function SignUpForm(props) {
             color="primary"
             className={classes.submit}
           >
-            Sign Up
+            Login
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
               <Link href="#" variant="body2">
-                Already have an account? Sign in
+                Forgot Username/Password?
+              </Link>
+            </Grid>
+          </Grid>
+          <Grid container justify="flex-end">
+          <Grid item>
+              <Link href="#" variant="body2">
+                New user? Create an account
               </Link>
             </Grid>
           </Grid>
         </form>
       </div>
-      {/* <Box mt={5}>
-        <Copyright />
-      </Box> */}
     </Container>
     </ThemeProvider>
   );
