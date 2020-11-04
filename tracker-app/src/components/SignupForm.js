@@ -6,6 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
+
 import Container from '@material-ui/core/Container';
 
 import { useHistory } from 'react-router-dom';
@@ -44,8 +45,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
-export default function SignUpForm() {
+export default function SignUpForm(props) {
   const classes = useStyles(theme);
   const history = useHistory();
 
@@ -64,20 +64,20 @@ export default function SignUpForm() {
   }
 
   const handleSubmit = (e) => {
+    e.preventDefault()
     axios.post("http://localhost:5000/api/auth/register", signup, { headers: { "Accept": "application/json" } }).then(res => {
-      console.log(res)
+      setSignup({
+        fname: "",
+        lname: "",
+        email: "",
+        password: "",
+      })
+      cancelCourse();
+      history.push("/login")
+      props.handleClick()
     }).catch(err => {
       console.log(err)
     })
-    e.preventDefault()
-    setSignup({
-      fname: "",
-      lname: "",
-      email: "",
-      password: "",
-    })
-    cancelCourse();
-    history.push("/login")
   }
 
   const cancelCourse = () => { 
@@ -86,6 +86,7 @@ export default function SignUpForm() {
 
   return (
     <ThemeProvider theme={theme}>
+
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
