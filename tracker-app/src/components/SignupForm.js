@@ -8,8 +8,9 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
+import { useHistory } from 'react-router-dom';
+
 import axios from 'axios';
-// import { sign } from 'jsonwebtoken';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -46,6 +47,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignUpForm() {
   const classes = useStyles(theme);
+  const history = useHistory();
 
   const [signup, setSignup] = useState({
     fname: "",
@@ -75,6 +77,7 @@ export default function SignUpForm() {
       password: "",
     })
     cancelCourse();
+    history.push("/login")
   }
 
   const cancelCourse = () => { 

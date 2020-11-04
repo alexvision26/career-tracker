@@ -8,7 +8,8 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import axios from 'axios';
-// import { sign } from 'jsonwebtoken';
+
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -45,6 +46,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function LoginForm() {
   const classes = useStyles(theme);
+  const history = useHistory();
 
   const [login, setLogin] = useState({
     email: "",
