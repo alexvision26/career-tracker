@@ -9,6 +9,9 @@ export const theme = createMuiTheme({
         main: '#4fc3f7',
       },
     },
+    regular: {
+      display: "flex"
+    },
     props: {
         MuiTextField: {
             variant: 'outlined'

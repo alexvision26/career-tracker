@@ -8,55 +8,34 @@
   );
   height: 100vh;
   min-width: 1260px;
-  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 
-  .purple-accent {
-    background-color: #5800cc;
-    position: absolute;
-    width: 74%;
-    min-width: 70%;
-    height: 56%;
-    z-index: -1;
-    left: 16%;
-    bottom: 346px;
-
-    @media only screen and (max-width: 1800px) {
-      width: 76%;
-      // left: 27%;
-      bottom: 347px;
-    }
-
-    @media only screen and (max-width: 1550px) {
-      width: 80%;
-      // left: 27%;
-      bottom: 347px;
-    }
-
-    @media only screen and (min-width: $bp-large-screen) {
-      width: 52%;
-      min-width: 0;
-      left: 27%;
-      bottom: 347px;
-    }
+  .new-accent {
+    width: 100%;
   }
 
   .signup-page {
     display: flex;
-    height: 100%;
     flex-direction: row;
-    width: 95%;
-    min-width: 1200px;
+    width: 70%;
+    -webkit-box-shadow: 35px -35px 0px 0px rgba(112, 0, 255, 1);
+    -moz-box-shadow: 35px -35px 0px 0px rgba(112, 0, 255, 1);
+    box-shadow: 35px -35px 0px 0px rgba(112, 0, 255, 1);
     justify-content: center;
     align-items: center;
     margin: auto;
 
-    @media only screen and (min-width: $bp-large-screen) {
-      width: 65%;
+    @media only screen and (min-width: 1800px) {
+      width: 50%;
     }
 
     .signup-img {
-      width: 50%;
-      height: 55%;
+      min-height: 700px;
+      width: 100%;
+      margin: 0 auto;
       background-image: url("https://images.pexels.com/photos/975657/pexels-photo-975657.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260");
       background-position: top;
       background-size: cover;
@@ -79,17 +58,15 @@
     }
 
     .form {
-      // width: 30%;
-      padding: 15px;
-      height: 55%;
+      width: 800px;
+      padding: 35px;
+      min-height: 700px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
-      // min-height: 100vh;
       background-color: white;
-      //   padding: 3%;
 
       .form-title {
         text-align: center;
@@ -98,7 +75,6 @@
         font-family: $base-font;
         letter-spacing: 0.1rem;
         color: $base_color;
-        // padding-top: 50px;
         margin: 0;
       }
 
