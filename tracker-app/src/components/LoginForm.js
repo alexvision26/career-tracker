@@ -130,7 +130,7 @@ export default function LoginForm() {
           </Grid>
           <Grid container justify="flex-end">
           <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="/register" variant="body2">
                 New user? Create an account
               </Link>
             </Grid>

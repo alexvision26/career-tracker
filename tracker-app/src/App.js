@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import SignUpForm from "./components/SignupForm";
 import LoginForm from "./components/LoginForm";
+import Dashboard from "./components/Dashboard";
 
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
@@ -58,13 +59,17 @@ function App() {
 
         <Route path="/login">
           <div className="login-form">
-          <h1 className="form-title">Tracker.io</h1>
+          
             <div className="login-content">
-            
+            <h1 className="form-title">Tracker.io</h1>
             <h3>Login</h3>
             <LoginForm />
             </div>
           </div>
+        </Route>
+
+        <Route path="/dashboard">
+            <Dashboard/>
         </Route>
 
         </Switch>
