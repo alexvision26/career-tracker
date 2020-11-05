@@ -112,14 +112,14 @@ const Dashboard = () => {
                 onChange={handleChange}
                 aria-label="simple tabs example"
               >
-                <Tab label="Item One" icon={<WorkIcon />} {...a11yProps(0)} />
+                <Tab label="Board" icon={<WorkIcon />} {...a11yProps(0)} />
                 <Tab
-                  label="Item Two"
+                  label="Contacts"
                   icon={<PermContactCalendarIcon />}
                   {...a11yProps(1)}
                 />
                 <Tab
-                  label="Item Three"
+                  label="Activities"
                   icon={<LocalActivityIcon />}
                   {...a11yProps(2)}
                 />
@@ -138,13 +138,13 @@ const Dashboard = () => {
           </AppBar>
 
           <TabPanel value={value} index={0}>
-            Item One
+            Board
           </TabPanel>
           <TabPanel value={value} index={1}>
-            Item Two
+            Contacts
           </TabPanel>
           <TabPanel value={value} index={2}>
-            Item Three
+            Activities
           </TabPanel>
         </div>
       </div>
