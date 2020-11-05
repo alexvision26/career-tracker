@@ -11,12 +11,19 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Box from '@material-ui/core/Box';
+import PermContactCalendarIcon from '@material-ui/icons/PermContactCalendar';
+import WorkIcon from '@material-ui/icons/Work';
+import LocalActivityIcon from '@material-ui/icons/LocalActivity';
+import CreateIcon from '@material-ui/icons/Create';
 import {theme} from '../styles/theme';
 
 const useStyles = makeStyles((theme) => ({
     root: {
       flexGrow: 1,
-      backgroundColor: "#7000ff"
+      backgroundColor: "#7000ff",
+    },
+    indicator: {
+        backgroundColor: "#00fff0"
     },
     menuButton: {
       marginRight: theme.spacing(2),
@@ -26,6 +33,14 @@ const useStyles = makeStyles((theme) => ({
     },
     tabs: {
         flexGrow: .5,
+    },
+    createButton: {
+        backgroundColor: "white",
+        color: "#7000ff",
+        "&:hover": {
+            backgroundColor: "white",
+            color: "#7000ff",
+        }
     }
   }));
 
@@ -85,13 +100,21 @@ const Dashboard = () => {
                                     Tracker.io
                                 </Typography>
 
-                                <Tabs value={value} className={classes.tabs} onChange={handleChange} aria-label="simple tabs example">
-                                    <Tab label="Item One" {...a11yProps(0)} />
-                                    <Tab label="Item Two" {...a11yProps(1)} />
-                                    <Tab label="Item Three" {...a11yProps(2)} />
+                                <Tabs value={value} className={classes.tabs} classes={{indicator: classes.indicator}} onChange={handleChange} aria-label="simple tabs example">
+                                    <Tab label="Item One" icon={<WorkIcon />} {...a11yProps(0)} />
+                                    <Tab label="Item Two" icon={<PermContactCalendarIcon />} {...a11yProps(1)} />
+                                    <Tab label="Item Three" icon={<LocalActivityIcon />} {...a11yProps(2)} />
                                 </Tabs>
 
-                                <Button color="inherit">Logout</Button>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    size="large"
+                                    className={classes.createButton}
+                                    startIcon={<CreateIcon />}
+                                >
+                                    Save
+                                </Button>
                         </Toolbar>
                     </AppBar>
 
