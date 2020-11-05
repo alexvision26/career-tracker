@@ -29,11 +29,11 @@
     margin: auto;
 
     @media only screen and (min-width: 1800px) {
-      width: 55%;
+      width: 50%;
     }
 
     .signup-img {
-      min-height: 600px;
+      min-height: 700px;
       width: 100%;
       margin: 0 auto;
       background-image: url("https://images.pexels.com/photos/975657/pexels-photo-975657.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260");
@@ -58,9 +58,9 @@
     }
 
     .form {
-      width: 600px;
+      width: 800px;
       padding: 35px;
-      min-height: 600px;
+      min-height: 700px;
       display: flex;
       flex-direction: column;
       justify-content: center;
