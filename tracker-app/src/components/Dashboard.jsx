@@ -101,7 +101,7 @@ const Dashboard = () => {
                 <MenuIcon />
               </IconButton>
 
-              <Typography variant="h6" className={classes.title}>
+              <Typography variant="h5" className={classes.title}>
                 Tracker.io
               </Typography>
 
@@ -132,7 +132,7 @@ const Dashboard = () => {
                 className={classes.createButton}
                 startIcon={<CreateIcon />}
               >
-                Save
+                Create Job
               </Button>
             </Toolbar>
           </AppBar>
