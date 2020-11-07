@@ -1,143 +1,254 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { theme } from "../styles/theme";
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import axios from 'axios';
+import Button from "@material-ui/core/Button";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import TextField from "@material-ui/core/TextField";
+import Link from "@material-ui/core/Link";
+import Grid from "@material-ui/core/Grid";
+import { makeStyles, ThemeProvider } from "@material-ui/core/styles";
+import Container from "@material-ui/core/Container";
+import clsx from "clsx";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import axios from "axios";
 
-import { useHistory } from 'react-router-dom';
+import { useHistory } from "react-router-dom";
+import { useEffect } from "react";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     // marginTop: theme.spacing(8),
-    display: 'flex',
-    width: '100%',
+    display: "flex",
+    width: "100%",
     height: "100%",
-    flexDirection: 'column',
+    flexDirection: "column",
     justifyContent: "center",
     margin: "auto",
-    alignItems: 'center',
+    alignItems: "center",
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
+    width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(3),
   },
   field: {
-    outlineColor: '#7000ff',
-    color: 'red',
+    outlineColor: "#7000ff",
+    color: "red",
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-    color: 'white',
-    backgroundColor: '#7000ff',
-    '&:hover': {
-      backgroundColor: '#5d00d6'
+    color: "white",
+    backgroundColor: "#7000ff",
+    "&:hover": {
+      backgroundColor: "#5d00d6",
     },
-    '&:active': {
-      backgroundColor: '#7000ff'
-    }
+    "&:active": {
+      backgroundColor: "#7000ff",
+    },
+  },
+  buttonSuccess: {
+    margin: theme.spacing(3, 0, 2),
+    color: "white",
+    backgroundColor: "#7000ff",
+    "&:hover": {
+      backgroundColor: "#5d00d6",
+    },
+    "&:active": {
+      backgroundColor: "#7000ff",
+    },
+  },
+  buttonProgress: {
+    color: "gray",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
   },
 }));
-
 
 export default function LoginForm() {
   const classes = useStyles(theme);
   const history = useHistory();
 
+  const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [login, setLogin] = useState({
     email: "",
     password: "",
-  })
+    isSub: false,
+  });
+  const [isError, setIsError] = useState({
+    e: false,
+    p: false,
+    err: false,
+  });
 
   const handleInput = (info) => {
     setLogin({
       ...login,
-      [info.target.name]: info.target.value
+      [info.target.name]: info.target.value,
     });
-  }
+  };
 
   const handleSubmit = (e) => {
-    axios.post("http://localhost:5000/api/auth/login", login, { headers: { "Accept": "application/json" } }).then(res => {
-      console.log(res)
-    }).catch(err => {
-      console.log(err)
-    })
-    e.preventDefault()
+    e.preventDefault();
+    setSuccess(false);
+    setLoading(true);
     setLogin({
-      email: "",
-      password: "",
-    })
-    cancelCourse();
-  }
+      ...login,
+      isSub: true,
+    });
+    console.log(isError);
+    if (isError.err) {
+      console.log("Error logging in");
 
-  const cancelCourse = () => { 
+      setSuccess(true);
+      setLoading(false);
+    } else if (!isError.err) {
+      axios
+        .post(
+          "http://localhost:5000/api/auth/login",
+          {
+            email: login.email,
+            password: login.password,
+          },
+          {
+            headers: { Accept: "application/json" },
+          }
+        )
+        .then((res) => {
+          console.log(res);
+          setSuccess(true);
+          setLoading(false);
+          setLogin({
+            email: "",
+            password: "",
+          });
+          cancelCourse();
+        })
+        .catch((err) => {
+          console.log(err);
+          setSuccess(true);
+          setLoading(false);
+        });
+    }
+  };
+
+  useEffect(() => {
+    let e,
+      p,
+      err = false;
+
+    if (login.email === "") {
+      e = true;
+    } else {
+      e = false;
+    }
+
+    if (login.password.length === "") {
+      p = true;
+    } else {
+      p = false;
+    }
+
+    if (e || p) {
+      err = true;
+    } else {
+      err = false;
+    }
+
+    setIsError({
+      e: e,
+      p: p,
+      err: err,
+    });
+  }, [login]);
+
+  const buttonClassname = clsx({
+    [classes.buttonSuccess]: success,
+  });
+
+  const cancelCourse = () => {
     document.getElementById("login-user-form").reset();
-  }
+  };
 
   return (
     <ThemeProvider theme={theme}>
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <form className={classes.form} onSubmit={handleSubmit} id="login-user-form" noValidate>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                onChange={handleInput}
-                autoComplete="email"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                onChange={handleInput}
-                id="password"
-                autoComplete="current-password"
-              />
-            </Grid>
-          </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            size="large"
-            variant="contained"
-            color="primary"
-            className={classes.submit}
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <form
+            className={classes.form}
+            onSubmit={handleSubmit}
+            id="login-user-form"
+            noValidate
           >
-            Login
-          </Button>
-          <Grid container justify="flex-end">
-            <Grid item>
-              <Link href="#" variant="body2">
-                Forgot Username/Password?
-              </Link>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  error={login.isSub && isError.e ? true : false}
+                  onChange={handleInput}
+                  autoComplete="email"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  error={login.isSub && isError.p ? true : false}
+                  onChange={handleInput}
+                  id="password"
+                  autoComplete="current-password"
+                />
+              </Grid>
             </Grid>
-          </Grid>
-          <Grid container justify="flex-end">
-          <Grid item>
-              <Link href="/register" variant="body2">
-                New user? Create an account
-              </Link>
+            <Button
+              type="submit"
+              fullWidth
+              size="large"
+              variant="contained"
+              color="primary"
+              // className={classes.submit}
+              style={{ margin: "35px 0" }}
+              // className={classes.submit}
+              className={buttonClassname}
+              disabled={loading}
+              // onClick={handleButtonClick}
+            >
+              Login
+              {loading && (
+                <CircularProgress
+                  size={24}
+                  className={classes.buttonProgress}
+                />
+              )}
+            </Button>
+            <Grid container justify="flex-end">
+              <Grid item>
+                <Link href="#" variant="body2">
+                  Forgot Username/Password?
+                </Link>
+              </Grid>
             </Grid>
-          </Grid>
-        </form>
-      </div>
-    </Container>
+            <Grid container justify="flex-end">
+              <Grid item>
+                <Link href="/register" variant="body2">
+                  New user? Create an account
+                </Link>
+              </Grid>
+            </Grid>
+          </form>
+        </div>
+      </Container>
     </ThemeProvider>
   );
 }

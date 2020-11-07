@@ -70,8 +70,6 @@ export default function SignUpForm(props) {
 
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
-  const timer = useRef();
-
   const [signup, setSignup] = useState({
     fname: "",
     lname: "",
@@ -79,7 +77,6 @@ export default function SignUpForm(props) {
     password: "",
     isSub: false,
   });
-
   const [isError, setIsError] = useState({
     f: false,
     l: false,
