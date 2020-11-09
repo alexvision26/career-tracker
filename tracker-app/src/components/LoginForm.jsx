@@ -141,7 +141,13 @@ export default function LoginForm() {
     if (login.email === "") {
       e = true;
     } else {
-      e = false;
+      let c1 = login.email.match(/@/g);
+      let c2 = login.email.match(/\./g);
+      if (!c1 || !c2) {
+        e = true;
+      } else {
+        e = false;
+      }
     }
 
     if (login.password.length === "") {

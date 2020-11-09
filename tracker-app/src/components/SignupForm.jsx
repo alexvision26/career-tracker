@@ -11,7 +11,11 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Container from "@material-ui/core/Container";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
+import { Alert, AlertTitle } from "@material-ui/lab";
+import { sign } from "jsonwebtoken";
+
+// import registerErrorCheck from "./errorHandle";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -62,6 +66,16 @@ const useStyles = makeStyles((theme) => ({
     marginTop: -12,
     marginLeft: -12,
   },
+  errorMain: {
+    color: "red",
+    fontSize: ".7rem",
+    textAlign: "center",
+    margin: "0",
+    padding: "0",
+    width: "100%",
+    paddingTop: "25px",
+  },
+  fieldError: {},
 }));
 
 export default function SignUpForm(props) {
@@ -83,18 +97,20 @@ export default function SignUpForm(props) {
     e: false,
     p: false,
     err: false,
+    msg: {},
   });
 
   const buttonClassname = clsx({
     [classes.buttonSuccess]: success,
   });
 
-  useEffect(() => {
+  function registerErrorCheck(cred) {
     let f,
       l,
       e,
       p,
       err = false;
+    let msg = {};
 
     if (signup.fname === "") {
       f = true;
@@ -111,7 +127,13 @@ export default function SignUpForm(props) {
     if (signup.email === "") {
       e = true;
     } else {
-      e = false;
+      let c1 = signup.email.match(/@/g);
+      let c2 = signup.email.match(/\./g);
+      if (!c1 || !c2) {
+        e = true;
+      } else {
+        e = false;
+      }
     }
 
     if (signup.password.length < 7) {
@@ -132,7 +154,12 @@ export default function SignUpForm(props) {
       e: e,
       p: p,
       err: err,
+      msg: {},
     });
+  }
+
+  useEffect(() => {
+    registerErrorCheck({ user: signup, errMsg: setIsError() });
   }, [signup]);
 
   const handleInput = (info) => {
@@ -185,8 +212,17 @@ export default function SignUpForm(props) {
         })
         .catch((err) => {
           console.log(err);
+          setIsError({
+            ...isError,
+            msg: {
+              ...isError.msg,
+              network: "Error connecting to server. Try again later",
+              details: err,
+            },
+          });
           setSuccess(true);
           setLoading(false);
+          console.log(isError);
         });
     }
   };
@@ -197,6 +233,12 @@ export default function SignUpForm(props) {
 
   return (
     <ThemeProvider theme={theme}>
+      {isError.msg.network && (
+        <Alert severity="error" className={classes.fieldError}>
+          <strong>Error connecting to server. Try again.</strong>
+          {/* <AlertTitle>Invalid email address.</AlertTitle> */}
+        </Alert>
+      )}
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.paper}>
@@ -261,6 +303,13 @@ export default function SignUpForm(props) {
                   autoComplete="current-password"
                 />
               </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              {signup.isSub && isError.err && (
+                <h6 className={classes.errorMain}>
+                  Please complete all fields marked with *
+                </h6>
+              )}
             </Grid>
             <Button
               type="submit"
