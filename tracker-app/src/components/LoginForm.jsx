@@ -9,10 +9,12 @@ import { makeStyles, ThemeProvider } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import clsx from "clsx";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { Alert } from "@material-ui/lab";
 import axios from "axios";
 
 import { useHistory } from "react-router-dom";
 import { useEffect } from "react";
+import { loginErrorCheck } from "./errorHandle";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -63,6 +65,16 @@ const useStyles = makeStyles((theme) => ({
     marginTop: -12,
     marginLeft: -12,
   },
+  errorMain: {
+    color: "red",
+    fontSize: ".7rem",
+    textAlign: "center",
+    margin: "0",
+    padding: "0",
+    width: "100%",
+    paddingTop: "25px",
+  },
+  fieldError: {},
 }));
 
 export default function LoginForm() {
@@ -80,6 +92,7 @@ export default function LoginForm() {
     e: false,
     p: false,
     err: false,
+    msg: {},
   });
 
   const handleInput = (info) => {
@@ -123,10 +136,19 @@ export default function LoginForm() {
             email: "",
             password: "",
           });
+          history.push("/dashboard");
           cancelCourse();
         })
         .catch((err) => {
           console.log(err);
+          setIsError({
+            ...isError,
+            msg: {
+              ...isError.msg,
+              network: "Error connecting to server. Try again later",
+              details: err,
+            },
+          });
           setSuccess(true);
           setLoading(false);
         });
@@ -134,39 +156,7 @@ export default function LoginForm() {
   };
 
   useEffect(() => {
-    let e,
-      p,
-      err = false;
-
-    if (login.email === "") {
-      e = true;
-    } else {
-      let c1 = login.email.match(/@/g);
-      let c2 = login.email.match(/\./g);
-      if (!c1 || !c2) {
-        e = true;
-      } else {
-        e = false;
-      }
-    }
-
-    if (login.password.length === "") {
-      p = true;
-    } else {
-      p = false;
-    }
-
-    if (e || p) {
-      err = true;
-    } else {
-      err = false;
-    }
-
-    setIsError({
-      e: e,
-      p: p,
-      err: err,
-    });
+    loginErrorCheck({ user: login, errMsg: setIsError });
   }, [login]);
 
   const buttonClassname = clsx({
@@ -179,6 +169,12 @@ export default function LoginForm() {
 
   return (
     <ThemeProvider theme={theme}>
+      {isError.msg.network && (
+        <Alert severity="error" className={classes.fieldError}>
+          <strong>Error connecting to the server. Please try again.</strong>
+          {/* <AlertTitle>Invalid email address.</AlertTitle> */}
+        </Alert>
+      )}
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.paper}>
@@ -215,6 +211,13 @@ export default function LoginForm() {
                   id="password"
                   autoComplete="current-password"
                 />
+              </Grid>
+              <Grid item xs={12}>
+                {login.isSub && isError.err && (
+                  <h6 className={classes.errorMain}>
+                    Please complete all fields marked with *
+                  </h6>
+                )}
               </Grid>
             </Grid>
             <Button

@@ -12,10 +12,9 @@ import Container from "@material-ui/core/Container";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { useEffect } from "react";
-import { Alert, AlertTitle } from "@material-ui/lab";
-import { sign } from "jsonwebtoken";
+import { Alert } from "@material-ui/lab";
 
-// import registerErrorCheck from "./errorHandle";
+import { registerErrorCheck } from "./errorHandle";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -104,62 +103,8 @@ export default function SignUpForm(props) {
     [classes.buttonSuccess]: success,
   });
 
-  function registerErrorCheck(cred) {
-    let f,
-      l,
-      e,
-      p,
-      err = false;
-    let msg = {};
-
-    if (signup.fname === "") {
-      f = true;
-    } else {
-      f = false;
-    }
-
-    if (signup.lname === "") {
-      l = true;
-    } else {
-      l = false;
-    }
-
-    if (signup.email === "") {
-      e = true;
-    } else {
-      let c1 = signup.email.match(/@/g);
-      let c2 = signup.email.match(/\./g);
-      if (!c1 || !c2) {
-        e = true;
-      } else {
-        e = false;
-      }
-    }
-
-    if (signup.password.length < 7) {
-      p = true;
-    } else {
-      p = false;
-    }
-
-    if (f || l || e || p) {
-      err = true;
-    } else {
-      err = false;
-    }
-
-    setIsError({
-      f: f,
-      l: l,
-      e: e,
-      p: p,
-      err: err,
-      msg: {},
-    });
-  }
-
   useEffect(() => {
-    registerErrorCheck({ user: signup, errMsg: setIsError() });
+    registerErrorCheck({ user: signup, errMsg: setIsError });
   }, [signup]);
 
   const handleInput = (info) => {
@@ -216,7 +161,7 @@ export default function SignUpForm(props) {
             ...isError,
             msg: {
               ...isError.msg,
-              network: "Error connecting to server. Try again later",
+              network: "Error connecting to server. Please try again.",
               details: err,
             },
           });
@@ -235,7 +180,7 @@ export default function SignUpForm(props) {
     <ThemeProvider theme={theme}>
       {isError.msg.network && (
         <Alert severity="error" className={classes.fieldError}>
-          <strong>Error connecting to server. Try again.</strong>
+          <strong>Error connecting to the server. Please try again.</strong>
           {/* <AlertTitle>Invalid email address.</AlertTitle> */}
         </Alert>
       )}
