@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import Container from "@material-ui/core/Container";
 import { makeStyles, ThemeProvider } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -15,32 +14,58 @@ import PermContactCalendarIcon from "@material-ui/icons/PermContactCalendar";
 import WorkIcon from "@material-ui/icons/Work";
 import LocalActivityIcon from "@material-ui/icons/LocalActivity";
 import CreateIcon from "@material-ui/icons/Create";
+import Drawer from "@material-ui/core/Drawer";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import SettingsIcon from "@material-ui/icons/Settings";
+import SecurityIcon from "@material-ui/icons/Security";
+import clsx from "clsx";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import ReceiptIcon from "@material-ui/icons/Receipt";
+import CreateJob from "./CreateJob";
 import { theme } from "../styles/theme";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    backgroundColor: "#7000ff",
+    backgroundColor: "#fafafa",
+    color: "black",
+    borderBottom: "1px",
   },
   indicator: {
-    backgroundColor: "#00fff0",
+    backgroundColor: "#7000ff",
   },
   menuButton: {
     marginRight: theme.spacing(2),
   },
   title: {
     flexGrow: 0.5,
+    fontSize: "1.4rem",
   },
   tabs: {
     flexGrow: 0.5,
   },
+  toolBar: {
+    boxShadow: "1px 1px 6px rgba(0, 0, 0, 0.151)",
+    height: "50px",
+  },
   createButton: {
-    backgroundColor: "white",
-    color: "#7000ff",
+    backgroundColor: "#7000ff",
+    color: "white",
+    fontSize: ".9rem",
+    padding: "7px 15px",
     "&:hover": {
-      backgroundColor: "white",
-      color: "#7000ff",
+      backgroundColor: "#7000ff",
+      color: "white",
     },
+  },
+  list: {
+    width: 250,
+  },
+  fullList: {
+    width: "auto",
   },
 }));
 
@@ -80,23 +105,95 @@ function a11yProps(index) {
 const Dashboard = () => {
   const classes = useStyles();
   const [value, setValue] = useState(0);
+  const [state, setState] = useState({
+    //Side bar open and close state
+    top: false,
+    left: false,
+    bottom: false,
+    right: false,
+  });
+  const [newJob, setNewJob] = useState(false); //Create Job Modal Open State
+
+  const handleOpen = () => {
+    setNewJob(true);
+  };
+
+  const toggleDrawer = (anchor, open) => (event) => {
+    if (
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+
+    setState({ ...state, [anchor]: open });
+  };
+
+  const iconMap = (idx) => {
+    switch (idx) {
+      case 0:
+        return <SettingsIcon />;
+      case 1:
+        return <SecurityIcon />;
+      case 2:
+        return <ReceiptIcon />;
+      case 3:
+        return <ExitToAppIcon />;
+      default:
+    }
+  };
+
+  const list = (anchor) => (
+    <div
+      className={clsx(classes.list, {
+        [classes.fullList]: anchor === "top" || anchor === "bottom",
+      })}
+      role="presentation"
+      onClick={toggleDrawer(anchor, false)}
+      onKeyDown={toggleDrawer(anchor, false)}
+    >
+      <List>
+        {["General", "Security", "Billing", "Logout"].map((text, index) => (
+          <ListItem button key={text}>
+            <ListItemIcon>{iconMap(index)}</ListItemIcon>
+            <ListItemText primary={text} />
+          </ListItem>
+        ))}
+      </List>
+    </div>
+  );
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  // test
   return (
     <>
       <ThemeProvider theme={theme} />
+
+      <div>
+        <React.Fragment key="left">
+          <Drawer
+            anchor="left"
+            open={state["left"]}
+            onClose={toggleDrawer("left", false)}
+          >
+            {list("left")}
+          </Drawer>
+        </React.Fragment>
+      </div>
+
+      <CreateJob newJob={newJob} setNewJob={setNewJob} />
+
       <div className="div-container">
         <div className={classes.root}>
           <AppBar position="static" className={classes.root}>
-            <Toolbar>
+            <Toolbar className={classes.toolBar}>
               <IconButton
                 edge="start"
                 className={classes.menuButton}
                 color="inherit"
                 aria-label="menu"
+                onClick={toggleDrawer("left", true)}
               >
                 <MenuIcon />
               </IconButton>
@@ -131,6 +228,7 @@ const Dashboard = () => {
                 size="large"
                 className={classes.createButton}
                 startIcon={<CreateIcon />}
+                onClick={handleOpen}
               >
                 Create Job
               </Button>
@@ -138,7 +236,7 @@ const Dashboard = () => {
           </AppBar>
 
           <TabPanel value={value} index={0}>
-            Board
+            Board TEST
           </TabPanel>
           <TabPanel value={value} index={1}>
             Contacts
