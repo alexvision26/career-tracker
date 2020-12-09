@@ -26,6 +26,8 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import ReceiptIcon from "@material-ui/icons/Receipt";
 import CreateJob from "./CreateJob";
 import { theme } from "../styles/theme";
+import { useSelector, useDispatch } from 'react-redux'
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -102,8 +104,10 @@ function a11yProps(index) {
   };
 }
 
-const Dashboard = () => {
+const Dashboard = (props) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const history = useHistory();
   const [value, setValue] = useState(0);
   const [state, setState] = useState({
     //Side bar open and close state
@@ -145,16 +149,34 @@ const Dashboard = () => {
 
   const list = (anchor) => (
     <div
-      className={clsx(classes.list, {
-        [classes.fullList]: anchor === "top" || anchor === "bottom",
-      })}
+      className={clsx(classes.list)}
       role="presentation"
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
         {["General", "Security", "Billing", "Logout"].map((text, index) => (
-          <ListItem button key={text}>
+          <ListItem button key={text} onClick={() => {
+            switch(index) {
+              case 0:
+                console.log("general")
+              break;
+              case 1:
+                console.log("security")
+              break;
+              case 2:
+                console.log("billing")
+                break;
+              case 3:
+                console.log("logout")
+                localStorage.removeItem("token")
+                localStorage.removeItem("user")
+                history.push("/login")
+                props.handleLogoutClick()
+                break;
+              default:
+            }
+          }}>
             <ListItemIcon>{iconMap(index)}</ListItemIcon>
             <ListItemText primary={text} />
           </ListItem>
@@ -237,6 +259,10 @@ const Dashboard = () => {
 
           <TabPanel value={value} index={0}>
             Board TEST
+            <button onClick={(e) => {
+              e.preventDefault()
+              dispatch({type: "UPDATE_USER"})
+            }}></button>
           </TabPanel>
           <TabPanel value={value} index={1}>
             Contacts
