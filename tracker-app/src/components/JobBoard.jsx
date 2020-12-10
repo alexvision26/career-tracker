@@ -1,18 +1,52 @@
-import React from "react";
-
-import { Container, Grid, makeStyles } from "@material-ui/core";
-import { useEffect } from "react";
-import { getAllJobs } from "../actions/index";
+import React, { useEffect, useState } from "react";
+import { Card, Container, Grid, makeStyles } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { axiosWithAuth } from "../utils/axiosWithAuth";
-import { useState } from "react";
+import {
+  AssignmentInd as AssignmentIndIcon,
+  BubbleChart as BubbleChartIcon,
+  SettingsInputAntenna as SettingsInputAntennaIcon,
+  AssignmentTurnedIn as AssignmentTurnedInIcon,
+  Cancel as CancelIcon,
+  SupervisedUserCircle as SupervisedUserCircleIcon,
+} from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   boardContainer: {
     margin: "0 auto",
   },
+  column: {},
   title: {
     textAlign: "center",
+    fontSize: "1.8rem",
+  },
+  cardContainer: {
+    borderRadius: "10px",
+    margin: "7% auto",
+    color: "white",
+    boxShadow: "3px 3px 10px 0px rgba(0,0,0,0.10)",
+    width: "80%",
+    height: "auto",
+    transition: ".05s ease-in-out",
+    "&:hover": {
+      opacity: ".9",
+      cursor: "pointer",
+    },
+  },
+  cardTitle: {
+    textTransform: "capitalize",
+    fontSize: "1.2rem",
+  },
+  cardContent: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+  },
+  cardIcon: {
+    width: 35,
+    height: 35,
+    padding: "0 7%",
   },
 }));
 
@@ -35,6 +69,22 @@ function JobBoard() {
   }, []);
 
   const jobSorter = (jobs, cat) => {
+    const renderIcon = () => {
+      switch (cat) {
+        case "Interested":
+          return <BubbleChartIcon className={classes.cardIcon} />;
+        case "Applied":
+          return <AssignmentIndIcon className={classes.cardIcon} />;
+        case "Reached out":
+          return <SettingsInputAntennaIcon className={classes.cardIcon} />;
+        case "Interview":
+          return <SupervisedUserCircleIcon className={classes.cardIcon} />;
+        case "Offer":
+          return <AssignmentTurnedInIcon className={classes.cardIcon} />;
+        case "Not moving forward":
+          return <CancelIcon className={classes.cardIcon} />;
+      }
+    };
     return jobs
       .filter((j) => {
         return j.status === cat;
@@ -42,11 +92,24 @@ function JobBoard() {
       .map((job, i) => {
         // console.log(job);
         return (
-          <div key={i} style={{ border: "1px solid red" }}>
-            <h3>{job.jobTitle}</h3>
-            <p>{job.company}</p>
-            <p>TEST</p>
-          </div>
+          // <div key={i} style={{ border: "1px solid red" }}>
+          <>
+            <Card
+              className={classes.cardContainer}
+              style={{
+                backgroundColor: `rgba(${job.color.r}, ${job.color.g}, ${job.color.b}, ${job.color.a} )`,
+              }}
+            >
+              <div className={classes.cardContent}>
+                {renderIcon()}
+                <div>
+                  <h3 className={classes.cardTitle}>{job.jobTitle}</h3>
+                  <p>{job.company}</p>
+                </div>
+              </div>
+            </Card>
+          </>
+          // </div>
         );
       });
   };
@@ -59,7 +122,7 @@ function JobBoard() {
           justify="space-evenly"
           className={classes.boardContainer}
         >
-          <Grid item xs={2}>
+          <Grid item xs={2} className={classes.column}>
             <h3 className={classes.title}>Interested</h3>
             {jobSorter(getJobs, "Interested")}
           </Grid>
