@@ -23,6 +23,16 @@ export const userSignup = account => dispatch => {
     dispatch({ type: CREATE_USER })
 }
 
+export const getAllJobs = id => dispatch => {
+    axiosWithAuth().get(`/jobs/${id}`)
+    .then(res => {
+        console.log(res)
+    })
+    .catch(err => {
+        console.log(err)
+    })
+}
+
 // export const userLogin = account => dispatch => {
 //     console.log("ran")
 //     // axios.post("http://localhost:5000/api/auth/login", account)

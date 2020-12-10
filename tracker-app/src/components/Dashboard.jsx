@@ -29,6 +29,8 @@ import { theme } from "../styles/theme";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 
+import JobBoard from "./JobBoard";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -260,7 +262,7 @@ const Dashboard = (props) => {
           </AppBar>
 
           <TabPanel value={value} index={0}>
-            Board TEST
+            <JobBoard />
           </TabPanel>
           <TabPanel value={value} index={1}>
             Contacts

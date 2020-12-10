@@ -40,5 +40,14 @@ export const userReducer = (state = initialState, action) => {
             return {
                 ...state,
             }
+
+        case "GET_JOBS":
+            console.log(action.payload)
+            return {
+                ...state,
+                job_board: action.payload
+            }
+        default:
+            return state
     }
 }

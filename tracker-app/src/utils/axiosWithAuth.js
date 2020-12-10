@@ -4,8 +4,8 @@ export const axiosWithAuth = () => {
     const token = window.localStorage.getItem('token')
     return axios.create({
         headers: {
-            authorization: token
+            'Authorization': `Bearer ${token}`
         },
-        baseURL: 'https://guarded-stream-88763.herokuapp.com/'
+        baseURL: 'http://localhost:5000/api/'
     })
 }

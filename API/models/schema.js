@@ -31,10 +31,16 @@ const jobSchema = mongoose.Schema({
     jobTitle: { type: String, required: true },
     company: { type: String, required: true },
     desc: {type: String, required: true },
-    location: String,
+    discovered: {type: String},
+    color: {type: Object, default: {
+        r: "",
+        g: "",
+        b: "",
+        a: ""
+    }, required: true},
+    location: {type: String, required: true},
     postUrl: String,
-    status: String,
-    deadline: Date,
+    status: {type: String, required: true},
 
     contacts: [contactSchema]
 })
