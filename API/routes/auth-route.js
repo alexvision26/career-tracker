@@ -39,9 +39,17 @@ router.post("/login", validateUserContent, (req, res) => {
             const token = generateToken(result)
 
             res.status(200).json({
-                message: `Welcome ${result.name}!`,
-                id: result._id,
-                token
+                message: `Welcome, ${result.fname}!`,
+                info: {
+                  id: result._id,
+                  first: result.fname,
+                  last: result.lname,
+                  email: result.email,
+                  industry: result.industry,
+                  created: result.created,
+                  token: token
+                }
+
             });
         } else {
             res.status(401).json({ message: "Invalid credentials" })

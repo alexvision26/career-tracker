@@ -49,19 +49,25 @@ router.post("/", (req, res) => {
         desc: req.body.desc,
         location: req.body.location,
         postUrl: req.body.postUrl,
+        discovered: req.body.discovered,
         status: req.body.status,
-        deadline: req.body.deadline
+        color: req.body.color
     })
 
-    const query = { _id: req.body.authorId }
+    if (!req.body.authorId || !req.body.jobTitle) {
+        res.status(400).json({invalid: "No credentials provided."})
+    } else {
 
-    User.updateOne(query, { $push: { jobs: job }}).then(result => {
-        // console.log(result)
-        res.status(201).json({ message: "Successfull added a job card!" })
-    }).catch(err => {
-        // console.log(err)
-        res.status(500).json(err)
+        const query = { _id: req.body.authorId }
+
+        User.updateOne(query, { $push: { jobs: job }}).then(result => {
+            // console.log(result)
+            res.status(201).json({ message: "Successfull added a job card!" })
+        }).catch(err => {
+            // console.log(err)
+            res.status(500).json(err)
     })
+    }
 })
 
 // EDIT A JOB CARD

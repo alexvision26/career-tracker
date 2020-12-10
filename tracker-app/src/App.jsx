@@ -13,11 +13,20 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
+function LogoutAlert(props) {
+  return <MuiAlert elevation={8} variant="filled" {...props} />;
+}
+
 function App() {
   const [open, setOpen] = useState(false);
+  const [logoutSuccess, setLogoutSuccess] = useState(false);
 
   const handleClick = () => {
     setOpen(true);
+  };
+
+  const handleLogoutClick = () => {
+    setLogoutSuccess(true);
   };
 
   const handleClose = (event, reason) => {
@@ -26,6 +35,14 @@ function App() {
     }
 
     setOpen(false);
+  };
+
+  const handleLogoutClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setLogoutSuccess(false);
   };
 
   return (
@@ -67,20 +84,31 @@ function App() {
           </Route>
 
           <Route path="/dashboard">
-            <Dashboard />
+            <Dashboard handleLogoutClick={handleLogoutClick}/>
           </Route>
         </Switch>
 
         {/* SUCCESS MESSAGE */}
         <Snackbar open={open} autoHideDuration={7000} onClose={handleClose}>
           <Alert
-            style={{ fontSize: "1.2rem", width: "120%" }}
+            style={{ fontSize: "1.2rem", width: "120%", backgroundColor: "lightgreen", color: "black" }}
             onClose={handleClose}
             severity="success"
           >
             Account successfully created!
           </Alert>
         </Snackbar>
+
+        <Snackbar open={logoutSuccess} autoHideDuration={6000} onClose={handleLogoutClose}>
+          <LogoutAlert
+            style={{ fontSize: "1.2rem", width: "120%", backgroundColor: "lightgreen", color: "black" }}
+            onClose={handleClose}
+            severity="success"
+          >
+            Successfully logged out.
+          </LogoutAlert>
+        </Snackbar>
+        
       </div>
     </Router>
   );
