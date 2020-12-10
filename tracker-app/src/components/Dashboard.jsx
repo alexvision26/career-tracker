@@ -168,7 +168,6 @@ const Dashboard = (props) => {
                 console.log("billing")
                 break;
               case 3:
-                console.log("logout")
                 localStorage.removeItem("token")
                 localStorage.removeItem("user")
                 history.push("/login")
@@ -191,7 +190,6 @@ const Dashboard = (props) => {
   return (
     <>
       <ThemeProvider theme={theme} />
-
       <div>
         <React.Fragment key="left">
           <Drawer
@@ -259,10 +257,6 @@ const Dashboard = (props) => {
 
           <TabPanel value={value} index={0}>
             Board TEST
-            <button onClick={(e) => {
-              e.preventDefault()
-              dispatch({type: "UPDATE_USER"})
-            }}></button>
           </TabPanel>
           <TabPanel value={value} index={1}>
             Contacts

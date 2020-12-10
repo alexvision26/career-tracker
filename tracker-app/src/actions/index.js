@@ -23,10 +23,10 @@ export const userSignup = account => dispatch => {
     dispatch({ type: CREATE_USER })
 }
 
-export const userLogin = account => dispatch => {
-    console.log("ran")
-    // axios.post("http://localhost:5000/api/auth/login", account)
-    // .then(res => {
-    //     console.log(res)
-    // })
-}
+// export const userLogin = account => dispatch => {
+//     console.log("ran")
+//     // axios.post("http://localhost:5000/api/auth/login", account)
+//     // .then(res => {
+//     //     console.log(res)
+//     // })
+// }
