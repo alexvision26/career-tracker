@@ -26,7 +26,7 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import ReceiptIcon from "@material-ui/icons/Receipt";
 import CreateJob from "./CreateJob";
 import { theme } from "../styles/theme";
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
@@ -156,26 +156,30 @@ const Dashboard = (props) => {
     >
       <List>
         {["General", "Security", "Billing", "Logout"].map((text, index) => (
-          <ListItem button key={text} onClick={() => {
-            switch(index) {
-              case 0:
-                console.log("general")
-              break;
-              case 1:
-                console.log("security")
-              break;
-              case 2:
-                console.log("billing")
-                break;
-              case 3:
-                localStorage.removeItem("token")
-                localStorage.removeItem("user")
-                history.push("/login")
-                props.handleLogoutClick()
-                break;
-              default:
-            }
-          }}>
+          <ListItem
+            button
+            key={text}
+            onClick={() => {
+              switch (index) {
+                case 0:
+                  console.log("general");
+                  break;
+                case 1:
+                  console.log("security");
+                  break;
+                case 2:
+                  console.log("billing");
+                  break;
+                case 3:
+                  localStorage.removeItem("token");
+                  localStorage.removeItem("user");
+                  history.push("/login");
+                  props.handleLogoutClick();
+                  break;
+                default:
+              }
+            }}
+          >
             <ListItemIcon>{iconMap(index)}</ListItemIcon>
             <ListItemText primary={text} />
           </ListItem>
@@ -250,7 +254,7 @@ const Dashboard = (props) => {
                 startIcon={<CreateIcon />}
                 onClick={handleOpen}
               >
-                Create Job
+                Add New Job
               </Button>
             </Toolbar>
           </AppBar>

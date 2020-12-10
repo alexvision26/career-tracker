@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Button from "@material-ui/core/Button";
@@ -52,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 0.5,
     padding: "2%",
     margin: "2% auto",
-    width: "85%",
+    width: "90%",
   },
   field: {
     width: "50%",
@@ -96,7 +97,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function CreateJob(props) {
-  const [jobColor, setJobColor] = useState({
+  const [jobStatus, setJobStatus] = useState("");
+  const [createNewJob, setCreateNewJob] = useState({
+    authorId: localStorage.getItem("user"),
+    jobTitle: "",
+    company: "",
+    desc: "",
+    location: "",
+    postUrl: "",
+    status: "",
     color: {
       r: "112",
       g: "0",
@@ -104,11 +113,38 @@ function CreateJob(props) {
       a: "1",
     },
   });
+  // const [jobColor, setJobColor] = useState({});
   const [showColorPicker, setShowColorPicker] = useState(false);
-  const [jobStatus, setJobStatus] = useState("");
+
   const classes = useStyles();
   // getModalStyle is not a pure function, we roll the style only on the first render
   const { newJob, setNewJob } = props;
+
+  const handleInput = (info) => {
+    setCreateNewJob({
+      ...createNewJob,
+      [info.target.name]: info.target.value,
+    });
+  };
+
+  const handleCreate = (e) => {
+    e.preventDefault();
+
+    console.log(createNewJob);
+
+    axios
+      .post("http://localhost:5000/api/jobs", createNewJob, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const handleClose = () => {
     setNewJob(false);
@@ -123,13 +159,17 @@ function CreateJob(props) {
   };
 
   const handleColorChange = (color) => {
-    setJobColor({
+    setCreateNewJob({
+      ...createNewJob,
       color: color.rgb,
     });
   };
 
   const handleStatusChange = (event) => {
-    setJobStatus(event.target.value);
+    setCreateNewJob({
+      ...createNewJob,
+      status: event.target.value,
+    });
   };
 
   const styles = reactCSS({
@@ -137,7 +177,7 @@ function CreateJob(props) {
       color: {
         height: "35px",
         borderRadius: "2px",
-        background: `rgba(${jobColor.color.r}, ${jobColor.color.g}, ${jobColor.color.b}, ${jobColor.color.a})`,
+        background: `rgba(${createNewJob.color.r}, ${createNewJob.color.g}, ${createNewJob.color.b}, ${createNewJob.color.a})`,
       },
       swatch: {
         padding: "5px",
@@ -162,7 +202,7 @@ function CreateJob(props) {
         left: "0px",
       },
       header: {
-        backgroundColor: `rgba(${jobColor.color.r}, ${jobColor.color.g}, ${jobColor.color.b}, ${jobColor.color.a})`,
+        backgroundColor: `rgba(${createNewJob.color.r}, ${createNewJob.color.g}, ${createNewJob.color.b}, ${createNewJob.color.a})`,
         color: "white",
       },
     },
@@ -191,13 +231,14 @@ function CreateJob(props) {
             <TextField
               className={classes.field}
               autoComplete="title"
-              name="title"
+              name="jobTitle"
               variant="outlined"
               label="Job Title"
               required
               fullWidth
-              id="title"
+              id="jobTitle"
               label="Job Title"
+              onChange={handleInput}
             />
 
             <TextField
@@ -209,6 +250,7 @@ function CreateJob(props) {
               fullWidth
               id="company"
               label="Company"
+              onChange={handleInput}
             />
 
             <TextField
@@ -217,20 +259,19 @@ function CreateJob(props) {
               name="location"
               variant="outlined"
               required
-              // fullWidth
               id="location"
               label="Location"
+              onChange={handleInput}
             />
 
             <TextField
               className={classes.field}
               autoComplete="url"
-              name="url"
+              name="postUrl"
               variant="outlined"
-              // required
-              // fullWidth
-              id="url"
+              id="postUrl"
               label="Post URL"
+              onChange={handleInput}
             />
 
             <TextField
@@ -238,9 +279,9 @@ function CreateJob(props) {
               autoComplete="discovered"
               name="discovered"
               variant="outlined"
-              // fullWidth
               id="discovered"
               label="Where did you find this job?"
+              onChange={handleInput}
             />
 
             <FormControl variant="outlined" className={classes.formControl}>
@@ -250,7 +291,9 @@ function CreateJob(props) {
               <Select
                 native
                 required
-                value={jobStatus}
+                onChange={handleInput}
+                // name="status"
+                value={createNewJob.status}
                 onChange={handleStatusChange}
                 label="Status"
                 inputProps={{
@@ -259,25 +302,24 @@ function CreateJob(props) {
                 }}
               >
                 <option aria-label="None" value="" />
-                <option value={10}>Interested</option>
-                <option value={20}>Applied</option>
-                <option value={30}>Reached out</option>
-                <option value={40}>Interview</option>
-                <option value={50}>Offer</option>
-                <option value={60}>Not moving forward</option>
+                <option value="Interested">Interested</option>
+                <option value="Applied">Applied</option>
+                <option value="Reached out">Reached out</option>
+                <option value="Interview">Interview</option>
+                <option value="Offer">Offer</option>
+                <option value="Not moving forward">Not moving forward</option>
               </Select>
             </FormControl>
           </Grid>
 
           <div style={styles.swatch} onClick={handleColorClick}>
-            {/* <p>Set Job Card Color:</p> */}
             <div style={styles.color} />
           </div>
           {showColorPicker ? (
             <div style={styles.popover}>
               <div style={styles.cover} onClick={handleColorClose} />
               <SketchPicker
-                color={jobColor.color}
+                color={createNewJob.color}
                 onChange={handleColorChange}
               />
             </div>
@@ -286,7 +328,7 @@ function CreateJob(props) {
           <TextField
             className={classes.desc}
             autoComplete="description"
-            name="description"
+            name="desc"
             variant="outlined"
             required
             multiline
@@ -295,6 +337,7 @@ function CreateJob(props) {
             fullWidth
             id="description"
             label="Description"
+            onChange={handleInput}
           />
 
           <Grid className={classes.buttons}>
@@ -306,7 +349,11 @@ function CreateJob(props) {
               Cancel
             </Button>
 
-            <Button variant="contained" className={classes.jobButton}>
+            <Button
+              variant="contained"
+              onClick={handleCreate}
+              className={classes.jobButton}
+            >
               Create Job
             </Button>
           </Grid>
