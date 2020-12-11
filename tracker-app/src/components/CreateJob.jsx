@@ -1,103 +1,21 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { makeStyles } from "@material-ui/core/styles";
-import Modal from "@material-ui/core/Modal";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import Grid from "@material-ui/core/Grid";
-// import CircularProgress from "@material-ui/core/CircularProgress";
 import Container from "@material-ui/core/Container";
 import { SketchPicker } from "react-color";
-import reactCSS, { hover } from "reactcss";
+import reactCSS from "reactcss";
+import {
+  Select,
+  InputLabel,
+  FormControl,
+  Grid,
+  TextField,
+  Modal,
+  Button,
+} from "@material-ui/core";
 
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormControl from "@material-ui/core/FormControl";
-
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    position: "absolute",
-    width: 400,
-    backgroundColor: theme.palette.background.paper,
-    outline: "none",
-    padding: 0,
-    boxShadow: theme.shadows[5],
-    margin: "auto",
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    height: 1100,
-    minWidth: "40%",
-  },
-  content: {
-    padding: theme.spacing(2, 4, 3),
-  },
-  header: {
-    width: "100%",
-    height: "auto",
-    backgroundColor: "white",
-    margin: 0,
-    padding: 0,
-    boxShadow: "1px 1px 6px rgba(0, 0, 0, 0.151)",
-  },
-  title: {
-    padding: 25,
-    margin: 0,
-    fontSize: "2rem",
-  },
-  form: {
-    display: "flex",
-    flexFlow: "row wrap",
-    flexGrow: 0.5,
-    padding: "2%",
-    margin: "2% auto",
-    width: "90%",
-  },
-  field: {
-    width: "50%",
-    margin: "2% 0 1%",
-    // height: "25px",
-  },
-  desc: {
-    width: "100%",
-    margin: "2% 0 3%",
-  },
-  formControl: {
-    width: "30%",
-    margin: "2% 0 3%",
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-  jobButton: {
-    color: "white",
-    backgroundColor: "#7000ff",
-    width: "125px",
-    "&:hover": {
-      backgroundColor: "#9644ff",
-    },
-  },
-  cancelButton: {
-    color: "#555555",
-    backgroundColor: "#cfcfcf",
-    width: "125px",
-    marginRight: 20,
-    "&:hover": {
-      backgroundColor: "#e2e2e2",
-    },
-  },
-  buttons: {
-    position: "absolute",
-    bottom: 0,
-    right: 0,
-    margin: "3%",
-  },
-}));
+import { modalStyles } from "../styles/modalStyles";
 
 function CreateJob(props) {
-  const [jobStatus, setJobStatus] = useState("");
   const [createNewJob, setCreateNewJob] = useState({
     authorId: localStorage.getItem("user"),
     jobTitle: "",
@@ -116,7 +34,7 @@ function CreateJob(props) {
   // const [jobColor, setJobColor] = useState({});
   const [showColorPicker, setShowColorPicker] = useState(false);
 
-  const classes = useStyles();
+  const classes = modalStyles();
   // getModalStyle is not a pure function, we roll the style only on the first render
   const { newJob, setNewJob } = props;
 

@@ -10,6 +10,7 @@ import {
   Cancel as CancelIcon,
   SupervisedUserCircle as SupervisedUserCircleIcon,
 } from "@material-ui/icons";
+import UpdateJobModal from "./UpdateJobModal";
 
 const useStyles = makeStyles((theme) => ({
   boardContainer: {
@@ -53,8 +54,16 @@ const useStyles = makeStyles((theme) => ({
 function JobBoard() {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const [updateJobModal, setUpdateJobModal] = useState(false);
   const userId = localStorage.getItem("user");
   const getJobs = useSelector((state) => state.job_board);
+
+  const [currEdit, setCurrEdit] = useState("");
+
+  const handleUpdateOpen = (id) => {
+    setCurrEdit(id);
+    setUpdateJobModal(true);
+  };
 
   useEffect(() => {
     axiosWithAuth()
@@ -90,12 +99,13 @@ function JobBoard() {
         return j.status === cat;
       })
       .map((job, i) => {
-        // console.log(job);
         return (
-          // <div key={i} style={{ border: "1px solid red" }}>
           <>
             <Card
               className={classes.cardContainer}
+              onClick={() => {
+                handleUpdateOpen(job._id);
+              }}
               style={{
                 backgroundColor: `rgba(${job.color.r}, ${job.color.g}, ${job.color.b}, ${job.color.a} )`,
               }}
@@ -109,13 +119,18 @@ function JobBoard() {
               </div>
             </Card>
           </>
-          // </div>
         );
       });
   };
 
   return (
     <>
+      <UpdateJobModal
+        updateJobModal={updateJobModal}
+        setUpdateJobModal={setUpdateJobModal}
+        currEdit={currEdit}
+      />
+
       <Container maxWidth>
         <Grid
           container
