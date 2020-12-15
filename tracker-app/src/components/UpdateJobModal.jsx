@@ -28,7 +28,12 @@ function UpdateJobModal(props) {
   const [updateJob, setUpdateJob] = useState({});
   const [showColorPicker, setShowColorPicker] = useState(false);
 
-  const { updateJobModal, setUpdateJobModal, currEdit } = props;
+  const {
+    updateJobModal,
+    setUpdateJobModal,
+    currEdit,
+    handleDeleteJob,
+  } = props;
 
   let jobToUpdate = useSelector((state) => {
     return state.job_board.filter((j) => {
@@ -285,7 +290,10 @@ function UpdateJobModal(props) {
               <Grid className={classes.buttonsUpdate}>
                 <Button
                   variant="contained"
-                  onClick={handleClose}
+                  onClick={() => {
+                    handleDeleteJob(jobToUpdate._id);
+                    handleClose();
+                  }}
                   className={classes.deleteButton}
                 >
                   Delete

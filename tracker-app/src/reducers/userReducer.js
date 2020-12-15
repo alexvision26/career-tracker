@@ -42,10 +42,24 @@ export const userReducer = (state = initialState, action) => {
             }
 
         case "GET_JOBS":
-            console.log(action.payload)
             return {
                 ...state,
                 job_board: action.payload
+            }
+
+        case "DELETE_JOB":
+            console.log(action.payload)
+            return {
+                ...state,
+                job_board: state.job_board.filter(el => {
+                    return el._id !== action.payload
+                })
+            }
+
+        case "CREATE_JOB":
+            return {
+                ...state,
+                job_board: [...state.job_board, action.payload]
             }
         default:
             return state

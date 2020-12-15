@@ -13,9 +13,13 @@ import {
   Button,
 } from "@material-ui/core";
 
+import { axiosWithAuth } from "../utils/axiosWithAuth";
+
 import { modalStyles } from "../styles/modalStyles";
+import { useDispatch } from "react-redux";
 
 function CreateJob(props) {
+  const dispatch = useDispatch();
   const [createNewJob, setCreateNewJob] = useState({
     authorId: localStorage.getItem("user"),
     jobTitle: "",
@@ -50,18 +54,16 @@ function CreateJob(props) {
 
     console.log(createNewJob);
 
-    axios
-      .post("http://localhost:5000/api/jobs", createNewJob, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
+    axiosWithAuth()
+      .post("/jobs", createNewJob)
       .then((res) => {
-        console.log(res);
+        console.log(res.data.job);
+        dispatch({ type: "CREATE_JOB", payload: res.data.job });
       })
       .catch((err) => {
         console.log(err);
       });
+    setNewJob(false);
   };
 
   const handleClose = () => {

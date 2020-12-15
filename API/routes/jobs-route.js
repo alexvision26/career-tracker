@@ -62,7 +62,7 @@ router.post("/", (req, res) => {
 
         User.updateOne(query, { $push: { jobs: job }}).then(result => {
             // console.log(result)
-            res.status(201).json({ message: "Successfull added a job card!" })
+            res.status(201).json({ message: "Successfull added a job card!", job: job })
         }).catch(err => {
             // console.log(err)
             res.status(500).json(err)
@@ -91,7 +91,7 @@ router.put("/:id", (req, res) => {
 })
 
 // DELETE A JOB CARD
-router.delete("/:id", (req, res) => {
+router.delete("/:id/job", (req, res) => {
     const id = req.params.id;
     const jobId = req.body._id;
 
@@ -106,7 +106,7 @@ router.delete("/:id", (req, res) => {
             res.status(200).json({ message: "Successfully deleted job." })
         }).catch(err => {
             // console.log(err)
-            res.status(500).json({ message: "Error deleting job." })
+            res.status(500).json({ message: "Error deleting job.", error: err })
         })
     })
 })

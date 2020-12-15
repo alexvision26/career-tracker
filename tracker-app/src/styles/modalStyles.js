@@ -13,9 +13,15 @@ export const modalStyles = makeStyles((theme) => ({
       right: 0,
       top: 0,
       bottom: 0,
-      height: 1100,
+      height: "auto",
+      // minHeight:"60%",
+      maxHeight: "90%",
       minWidth: "40%",
     },
+    // ContentContainer: {
+    //   display: "flex",
+    //   alignItems: "center"
+    // },
     content: {
       padding: theme.spacing(2, 4, 3),
     },
@@ -88,11 +94,13 @@ export const modalStyles = makeStyles((theme) => ({
     buttonsUpdate: {
         position: "absolute",
         bottom: 0,
-        right: 20,
+        left: 0,
+        right: 0,
         display: "flex",
         justifyContent: "flex-end",
-        margin: "3% auto",
-        width: "94%"
+        margin: "4% auto",
+        // padding: "4% 0",
+        width: "84%"
       },
     updateHeader: {
         maxHeight: "15%",
