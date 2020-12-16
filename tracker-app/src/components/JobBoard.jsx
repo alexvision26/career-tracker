@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     // padding: ".5%",
     width: "70%",
     height: "auto",
-    // minHeight: "20%",
+    minHeight: "80px",
     transition: ".05s ease-in-out",
     "&:hover": {
       opacity: ".9",
@@ -48,6 +48,8 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",
+    padding: "1%",
+    margin: "4% 2% 8% 2%",
   },
   cardIcon: {
     width: 35,
@@ -55,8 +57,12 @@ const useStyles = makeStyles((theme) => ({
     padding: "0 1% 0 2.5%",
   },
   cardTitleCont: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "flex-start",
     textTransform: "capitalize",
-    padding: "3% 2% 4% 2%",
+    // padding: "3% 2% 4% 2%",
     margin: 0,
   },
   date: {
@@ -157,8 +163,10 @@ function JobBoard() {
               <div className={classes.cardContent}>
                 {renderIcon()}
                 <div className={classes.cardTitleCont}>
-                  <h3 className={classes.cardTitle}>{job.jobTitle}</h3>
-                  <p>{job.company}</p>
+                  <h3 style={{ margin: 0 }} className={classes.cardTitle}>
+                    {job.jobTitle}
+                  </h3>
+                  <p style={{ margin: 0 }}>{job.company}</p>
                 </div>
               </div>
               {formatDate(job.created, cat)}
