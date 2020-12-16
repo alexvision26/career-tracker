@@ -25,6 +25,17 @@ export const initialState = {
 
 export const userReducer = (state = initialState, action) => {
     switch (action.type) {
+        case "LOGGED_IN":
+            return {
+                ...state,
+                isLoggedIn: true
+            }
+        case "LOGGED_OUT":
+            return {
+                ...state,
+                isLoggedIn: false
+            }
+
         case CREATE_USER:
             return {
                 ...state,
@@ -33,7 +44,8 @@ export const userReducer = (state = initialState, action) => {
         case LOGIN_USER:
             return {
                 ...state,
-                user_info: action.payload
+                user_info: action.payload,
+                isLoggedIn: true
             }
 
         case UPDATE_USER:
@@ -42,10 +54,24 @@ export const userReducer = (state = initialState, action) => {
             }
 
         case "GET_JOBS":
-            console.log(action.payload)
             return {
                 ...state,
                 job_board: action.payload
+            }
+
+        case "DELETE_JOB":
+            console.log(action.payload)
+            return {
+                ...state,
+                job_board: state.job_board.filter(el => {
+                    return el._id !== action.payload
+                })
+            }
+
+        case "CREATE_JOB":
+            return {
+                ...state,
+                job_board: [...state.job_board, action.payload]
             }
         default:
             return state

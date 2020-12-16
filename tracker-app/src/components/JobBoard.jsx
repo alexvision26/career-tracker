@@ -11,6 +11,7 @@ import {
   SupervisedUserCircle as SupervisedUserCircleIcon,
 } from "@material-ui/icons";
 import UpdateJobModal from "./UpdateJobModal";
+import { reloadJobBoard } from "../utils/reloadJobBoard";
 
 const useStyles = makeStyles((theme) => ({
   boardContainer: {
@@ -23,11 +24,14 @@ const useStyles = makeStyles((theme) => ({
   },
   cardContainer: {
     borderRadius: "10px",
-    margin: "7% auto",
+    position: "relative",
+    margin: "6% auto",
     color: "white",
-    boxShadow: "3px 3px 10px 0px rgba(0,0,0,0.10)",
-    width: "80%",
+    boxShadow: "3px 3px 10px 0px rgba(0,0,0,0.22)",
+    // padding: ".5%",
+    width: "85%",
     height: "auto",
+    minHeight: "80px",
     transition: ".05s ease-in-out",
     "&:hover": {
       opacity: ".9",
@@ -36,18 +40,39 @@ const useStyles = makeStyles((theme) => ({
   },
   cardTitle: {
     textTransform: "capitalize",
-    fontSize: "1.2rem",
+    // width: "100%",
+    fontSize: "1rem",
+    // padding: "0",
   },
   cardContent: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",
+    padding: "1.5%",
+    margin: "4% 2% 12% 2%",
   },
   cardIcon: {
     width: 35,
     height: 35,
-    padding: "0 7%",
+    padding: "0 2% 0 2.5%",
+  },
+  cardTitleCont: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "flex-start",
+    textTransform: "capitalize",
+    // padding: "3% 2% 4% 2%",
+    margin: 0,
+  },
+  date: {
+    textAlign: "right",
+    bottom: 0,
+    right: 20,
+    fontSize: ".6rem",
+    width: "90%",
+    position: "absolute",
   },
 }));
 
@@ -65,7 +90,15 @@ function JobBoard() {
     setUpdateJobModal(true);
   };
 
-  useEffect(() => {
+  function formatDate(d, action) {
+    var date = new Date(d);
+    let month = date.toLocaleString("default", { month: "short" });
+    let newDate = `${action} ${month} ${date.getDate().toString()}`;
+    // Need to send a new date object when updated!!!
+    return <p className={classes.date}>{newDate}</p>;
+  }
+
+  const reloadJobBoard = () => {
     axiosWithAuth()
       .get(`jobs/${userId}`)
       .then((res) => {
@@ -75,6 +108,23 @@ function JobBoard() {
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  const handleDeleteJob = (jobId) => {
+    console.log("deleting... ", jobId);
+    axiosWithAuth()
+      .delete(`jobs/${userId}/job`, { data: { _id: jobId } })
+      .then((res) => {
+        // reloadJobBoard();
+        dispatch({ type: "DELETE_JOB", payload: jobId });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    reloadJobBoard();
   }, []);
 
   const jobSorter = (jobs, cat) => {
@@ -102,6 +152,7 @@ function JobBoard() {
         return (
           <>
             <Card
+              key={job.jobTitle}
               className={classes.cardContainer}
               onClick={() => {
                 handleUpdateOpen(job._id);
@@ -112,11 +163,14 @@ function JobBoard() {
             >
               <div className={classes.cardContent}>
                 {renderIcon()}
-                <div>
-                  <h3 className={classes.cardTitle}>{job.jobTitle}</h3>
-                  <p>{job.company}</p>
+                <div className={classes.cardTitleCont}>
+                  <h3 style={{ margin: 0 }} className={classes.cardTitle}>
+                    {job.jobTitle}
+                  </h3>
+                  <p style={{ margin: 0, fontSize: ".9rem" }}>{job.company}</p>
                 </div>
               </div>
+              {formatDate(job.created, cat)}
             </Card>
           </>
         );
@@ -129,6 +183,7 @@ function JobBoard() {
         updateJobModal={updateJobModal}
         setUpdateJobModal={setUpdateJobModal}
         currEdit={currEdit}
+        handleDeleteJob={handleDeleteJob}
       />
 
       <Container maxWidth>
