@@ -12,8 +12,8 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { Alert } from "@material-ui/lab";
 import axios from "axios";
 
-import { useDispatch } from 'react-redux'
-import { userLogin } from '../actions/index';
+import { useDispatch } from "react-redux";
+import { userLogin } from "../actions/index";
 import { useHistory } from "react-router-dom";
 import { useEffect } from "react";
 import { loginErrorCheck } from "./errorHandle";
@@ -120,7 +120,7 @@ export default function LoginForm(props) {
       setSuccess(true);
       setLoading(false);
     } else if (!isError.err) {
-      console.log("should run")
+      console.log("should run");
       axios
         .post(
           "http://localhost:5000/api/auth/login",
@@ -134,9 +134,9 @@ export default function LoginForm(props) {
         )
         .then((res) => {
           console.log(res);
-          localStorage.setItem("token", res.data.info.token)
-          localStorage.setItem("user", res.data.info.id)
-          dispatch({ type: "LOGIN_USER", payload: res.data.info})
+          localStorage.setItem("token", res.data.info.token);
+          localStorage.setItem("user", res.data.info.id);
+          dispatch({ type: "LOGIN_USER", payload: res.data.info });
           setSuccess(true);
           setLoading(false);
           setLogin({

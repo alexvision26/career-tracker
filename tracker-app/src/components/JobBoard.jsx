@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     boxShadow: "3px 3px 10px 0px rgba(0,0,0,0.22)",
     // padding: ".5%",
-    width: "70%",
+    width: "85%",
     height: "auto",
     minHeight: "80px",
     transition: ".05s ease-in-out",
@@ -40,7 +40,8 @@ const useStyles = makeStyles((theme) => ({
   },
   cardTitle: {
     textTransform: "capitalize",
-    fontSize: "1.1rem",
+    // width: "100%",
+    fontSize: "1rem",
     // padding: "0",
   },
   cardContent: {
@@ -48,13 +49,13 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",
-    padding: "1%",
-    margin: "4% 2% 8% 2%",
+    padding: "1.5%",
+    margin: "4% 2% 12% 2%",
   },
   cardIcon: {
     width: 35,
     height: 35,
-    padding: "0 1% 0 2.5%",
+    padding: "0 2% 0 2.5%",
   },
   cardTitleCont: {
     display: "flex",
@@ -166,7 +167,7 @@ function JobBoard() {
                   <h3 style={{ margin: 0 }} className={classes.cardTitle}>
                     {job.jobTitle}
                   </h3>
-                  <p style={{ margin: 0 }}>{job.company}</p>
+                  <p style={{ margin: 0, fontSize: ".9rem" }}>{job.company}</p>
                 </div>
               </div>
               {formatDate(job.created, cat)}
