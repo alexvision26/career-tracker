@@ -5,6 +5,7 @@ import {
   Redirect,
   Route,
   Switch,
+  useHistory,
 } from "react-router-dom";
 import SignUpForm from "./components/SignupForm";
 import LoginForm from "./components/LoginForm";
@@ -30,32 +31,29 @@ function LogoutAlert(props) {
 function App() {
   const [open, setOpen] = useState(false);
   const [logoutSuccess, setLogoutSuccess] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const history = useHistory();
 
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector((state) => state.isLoggedIn);
 
-  const checkUserLogin = () => {
-    if (localStorage.getItem("token") && localStorage.getItem("user")) {
+  useEffect(() => {
+    const checkUserLogin = async () => {
       const user = localStorage.getItem("user");
 
       axiosWithAuth()
         .get(`users/${user}`)
         .then((res) => {
+          setIsLoggedIn(true);
           dispatch({ type: "LOGGED_IN" });
         })
         .catch((err) => {
-          console.log("NOT LOGGED IN");
           localStorage.removeItem("user");
           localStorage.removeItem("token");
+          setIsLoggedIn(false);
           dispatch({ type: "LOGGED_OUT" });
         });
-    } else {
-      console.log("NOT LOGGED IN");
-      dispatch({ type: "LOGGED_OUT" });
-    }
-  };
+    };
 
-  useEffect(() => {
     checkUserLogin();
   }, []);
 
@@ -64,6 +62,10 @@ function App() {
   };
 
   const handleLogoutClick = () => {
+    setIsLoggedIn(false);
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    dispatch({ type: "LOGGED_OUT" });
     setLogoutSuccess(true);
   };
 
@@ -90,31 +92,29 @@ function App() {
         Open success
       </Button> */}
 
+      {/* {isLoggedIn ? <div>LOGGED IN</div> : null} */}
+
       <div className="App">
-        {/* test note */}
         <Switch>
           <Redirect exact from="/" to="/register" />
-          {isLoggedIn ? (
-            <Redirect exact from="/register" to="/dashboard" />
-          ) : (
-            <Route path="/register">
-              <div className="background-signup">
-                <div className="new-accent">
-                  <div className="signup-page">
-                    <div className="form">
-                      <h1 className="form-title">Tracker.io</h1>
-                      <h3>Signup free today!</h3>
-                      <SignUpForm handleClick={handleClick} />
-                    </div>
-                    <div className="signup-img">
-                      <div className="signup-img-overlay" />
-                      <div className="signup-prof-img"></div>
-                    </div>
+
+          <Route path="/register">
+            <div className="background-signup">
+              <div className="new-accent">
+                <div className="signup-page">
+                  <div className="form">
+                    <h1 className="form-title">Tracker.io</h1>
+                    <h3>Signup free today!</h3>
+                    <SignUpForm handleClick={handleClick} />
+                  </div>
+                  <div className="signup-img">
+                    <div className="signup-img-overlay" />
+                    <div className="signup-prof-img"></div>
                   </div>
                 </div>
               </div>
-            </Route>
-          )}
+            </div>
+          </Route>
 
           {isLoggedIn ? (
             <Redirect exact from="/login" to="/dashboard" />
@@ -130,15 +130,12 @@ function App() {
             </Route>
           )}
 
-          {isLoggedIn ? (
-            <PrivateRoute
-              handleLogoutClick={handleLogoutClick}
-              path="/dashboard"
-              component={Dashboard}
-            />
-          ) : (
-            <Redirect from="/dashboard" to="/login" />
-          )}
+          <PrivateRoute
+            handleLogoutClick={handleLogoutClick}
+            path="/dashboard"
+            component={Dashboard}
+          />
+
           {/* <Dashboard handleLogoutClick={handleLogoutClick} /> */}
         </Switch>
 

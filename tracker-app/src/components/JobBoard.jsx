@@ -11,7 +11,7 @@ import {
   SupervisedUserCircle as SupervisedUserCircleIcon,
 } from "@material-ui/icons";
 import UpdateJobModal from "./UpdateJobModal";
-import { DragDropContext } from "react-beautiful-dnd";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const useStyles = makeStyles((theme) => ({
   boardContainer: {
@@ -82,7 +82,14 @@ function JobBoard() {
   const [updateJobModal, setUpdateJobModal] = useState(false);
   const userId = localStorage.getItem("user");
   const getJobs = useSelector((state) => state.job_board);
-
+  const statusColumns = [
+    "Interested",
+    "Applied",
+    "Reached out",
+    "Interview",
+    "Offer",
+    "Not moving forward",
+  ];
   const [currEdit, setCurrEdit] = useState("");
 
   const handleUpdateOpen = (id) => {
@@ -187,36 +194,24 @@ function JobBoard() {
       />
 
       <Container maxWidth>
-        <Grid
-          container
-          justify="space-evenly"
-          className={classes.boardContainer}
-        >
-          <Grid item xs={2} className={classes.column}>
-            <h3 className={classes.title}>Interested</h3>
-            {jobSorter(getJobs, "Interested")}
+        <DragDropContext>
+          <Grid
+            container
+            justify="space-evenly"
+            className={classes.boardContainer}
+          >
+            {statusColumns.map((c) => {
+              return (
+                <>
+                  <Grid item xs={2}>
+                    <h3 className={classes.title}>{c}</h3>
+                    {jobSorter(getJobs, c)}
+                  </Grid>
+                </>
+              );
+            })}
           </Grid>
-          <Grid item xs={2}>
-            <h3 className={classes.title}>Applied</h3>
-            {jobSorter(getJobs, "Applied")}
-          </Grid>
-          <Grid item xs={2}>
-            <h3 className={classes.title}>Reached out</h3>
-            {jobSorter(getJobs, "Reached out")}
-          </Grid>
-          <Grid item xs={2}>
-            <h3 className={classes.title}>Interview</h3>
-            {jobSorter(getJobs, "Interview")}
-          </Grid>
-          <Grid item xs={2}>
-            <h3 className={classes.title}>Offer</h3>
-            {jobSorter(getJobs, "Offer")}
-          </Grid>
-          <Grid item xs={2}>
-            <h3 className={classes.title}>Not moving forward</h3>
-            {jobSorter(getJobs, "Not moving forward")}
-          </Grid>
-        </Grid>
+        </DragDropContext>
       </Container>
     </>
   );
