@@ -11,7 +11,7 @@ import {
   SupervisedUserCircle as SupervisedUserCircleIcon,
 } from "@material-ui/icons";
 import UpdateJobModal from "./UpdateJobModal";
-import { reloadJobBoard } from "../utils/reloadJobBoard";
+import { DragDropContext } from "react-beautiful-dnd";
 
 const useStyles = makeStyles((theme) => ({
   boardContainer: {
