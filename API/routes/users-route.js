@@ -2,6 +2,26 @@ const router = require("express").Router();
 const bcrypt = require("bcryptjs");
 const { User } = require("../models/schema");
 
+// GET ACCOUNT INFO
+
+// { user: {
+//   fname: doc.fname,
+//   lname: doc.lname,
+//   email: doc.email,
+//   industry: doc.industry,
+//   created: doc.created.toDateString()
+// } }
+
+router.get("/:id", (req, res) => {
+  const id = req.params.id;
+
+  User.findOne({ _id: id }).then(doc => {
+    res.status(200).json({ status: "Session valid" })
+  }).catch(err => {
+    res.status(500).json(err)
+  })
+})
+
 // EDIT ACCOUNT DETAILS
 
 router.put("/:id", (req, res) => {

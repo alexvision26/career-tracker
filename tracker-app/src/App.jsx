@@ -16,6 +16,7 @@ import MuiAlert from "@material-ui/lab/Alert";
 import PrivateRoute from "./utils/PrivateRoute";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { axiosWithAuth } from "./utils/axiosWithAuth";
 // import Button from '@material-ui/core/Button';
 
 function Alert(props) {
@@ -33,12 +34,29 @@ function App() {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.isLoggedIn);
 
-  useEffect(() => {
-    if (localStorage.getItem("token")) {
-      dispatch({ type: "LOGGED_IN" });
+  const checkUserLogin = () => {
+    if (localStorage.getItem("token") && localStorage.getItem("user")) {
+      const user = localStorage.getItem("user");
+
+      axiosWithAuth()
+        .get(`users/${user}`)
+        .then((res) => {
+          dispatch({ type: "LOGGED_IN" });
+        })
+        .catch((err) => {
+          console.log("NOT LOGGED IN");
+          localStorage.removeItem("user");
+          localStorage.removeItem("token");
+          dispatch({ type: "LOGGED_OUT" });
+        });
     } else {
+      console.log("NOT LOGGED IN");
       dispatch({ type: "LOGGED_OUT" });
     }
+  };
+
+  useEffect(() => {
+    checkUserLogin();
   }, []);
 
   const handleClick = () => {
@@ -112,11 +130,15 @@ function App() {
             </Route>
           )}
 
-          <PrivateRoute
-            handleLogoutClick={handleLogoutClick}
-            path="/dashboard"
-            component={Dashboard}
-          />
+          {isLoggedIn ? (
+            <PrivateRoute
+              handleLogoutClick={handleLogoutClick}
+              path="/dashboard"
+              component={Dashboard}
+            />
+          ) : (
+            <Redirect from="/dashboard" to="/login" />
+          )}
           {/* <Dashboard handleLogoutClick={handleLogoutClick} /> */}
         </Switch>
 
