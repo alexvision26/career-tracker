@@ -16,6 +16,7 @@ export const initialState = {
     user_id: "",
     user_info: {},
     job_board: [],
+    board_columns: [],
     contacts: [],
     isLoggedIn: false,
     isFetching: false,
