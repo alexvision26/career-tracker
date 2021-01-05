@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import Container from "@material-ui/core/Container";
-import { SketchPicker } from "react-color";
+// import { SketchPicker } from "react-color";
 import reactCSS from "reactcss";
 import {
   AssignmentInd as AssignmentIndIcon,
@@ -21,13 +21,12 @@ import {
   Button,
 } from "@material-ui/core";
 import { modalStyles } from "../styles/modalStyles";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { axiosWithAuth } from "../utils/axiosWithAuth";
 
 function UpdateJobModal(props) {
   const classes = modalStyles();
-  const [updateJob, setUpdateJob] = useState({});
-  const [showColorPicker, setShowColorPicker] = useState(false);
-
+  const dispatch = useDispatch();
   const {
     updateJobModal,
     setUpdateJobModal,
@@ -41,6 +40,13 @@ function UpdateJobModal(props) {
     });
   });
   jobToUpdate = jobToUpdate[0];
+
+  const [updateJob, setUpdateJob] = useState(jobToUpdate);
+  const [showColorPicker, setShowColorPicker] = useState(false);
+
+  useEffect(() => {
+    setUpdateJob(jobToUpdate);
+  }, [updateJobModal]);
 
   const handleClose = () => {
     setUpdateJobModal(false);
@@ -61,6 +67,34 @@ function UpdateJobModal(props) {
       case "Not moving forward":
         return <CancelIcon className={classes.updateIcon} />;
     }
+  };
+
+  const handleInput = (e) => {
+    setUpdateJob({
+      ...updateJob,
+      [e.target.name]: e.target.value,
+      updated: Date.now,
+    });
+    console.log(updateJob);
+  };
+
+  const handleUpdate = () => {
+    axiosWithAuth()
+      .put(`jobs/${localStorage.getItem("user")}`, updateJob)
+      .then((res) => {
+        axiosWithAuth()
+          .get(`jobs/${localStorage.getItem("user")}`)
+          .then((result) => {
+            dispatch({ type: "UPDATE_JOB", payload: result.data.jobs });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        handleClose();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   //   const handleColorClick = () => {
@@ -172,7 +206,7 @@ function UpdateJobModal(props) {
                   name="jobTitle"
                   variant="outlined"
                   label="Job Title"
-                  value={jobToUpdate.jobTitle}
+                  defaultValue={jobToUpdate.jobTitle}
                   required
                   fullWidth
                   id="jobTitle"
@@ -186,7 +220,7 @@ function UpdateJobModal(props) {
                   name="company"
                   disabled
                   variant="outlined"
-                  value={jobToUpdate.company}
+                  defaultValue={jobToUpdate.company}
                   required
                   fullWidth
                   id="company"
@@ -199,11 +233,11 @@ function UpdateJobModal(props) {
                   autoComplete="location"
                   name="location"
                   variant="outlined"
-                  value={jobToUpdate.location}
+                  defaultValue={jobToUpdate.location}
                   required
                   id="location"
                   label="Location"
-                  //   onChange={handleInput}
+                  onChange={handleInput}
                 />
 
                 <TextField
@@ -211,10 +245,10 @@ function UpdateJobModal(props) {
                   autoComplete="url"
                   name="postUrl"
                   variant="outlined"
-                  value={jobToUpdate.postUrl}
+                  defaultValue={jobToUpdate.postUrl}
                   id="postUrl"
                   label="Post URL"
-                  //   onChange={handleInput}
+                  onChange={handleInput}
                 />
 
                 <TextField
@@ -222,10 +256,10 @@ function UpdateJobModal(props) {
                   autoComplete="discovered"
                   name="discovered"
                   variant="outlined"
-                  value={jobToUpdate.discovered}
+                  defaultValue={jobToUpdate.discovered}
                   id="discovered"
                   label="Where did you find this job?"
-                  //   onChange={handleInput}
+                  onChange={handleInput}
                 />
 
                 <FormControl variant="outlined" className={classes.formControl}>
@@ -235,10 +269,9 @@ function UpdateJobModal(props) {
                   <Select
                     native
                     required
-                    // onChange={handleInput}
-                    // name="status"
-                    value={jobToUpdate.status}
-                    // onChange={handleStatusChange}
+                    name="status"
+                    defaultValue={jobToUpdate.status}
+                    onChange={handleInput}
                     label="Status"
                     inputProps={{
                       name: "status",
@@ -284,7 +317,7 @@ function UpdateJobModal(props) {
                 fullWidth
                 id="description"
                 label="Description"
-                // onChange={handleInput}
+                onChange={handleInput}
               />
 
               <Grid className={classes.buttonsUpdate}>
@@ -308,7 +341,7 @@ function UpdateJobModal(props) {
 
                 <Button
                   variant="contained"
-                  //   onClick={handleCreate}
+                  onClick={handleUpdate}
                   className={classes.jobButton}
                 >
                   Update Job

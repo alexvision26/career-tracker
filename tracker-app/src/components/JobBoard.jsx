@@ -158,7 +158,10 @@ function JobBoard() {
                 handleUpdateOpen(job._id);
               }}
               style={{
-                backgroundColor: `rgba(${job.color.r}, ${job.color.g}, ${job.color.b}, ${job.color.a} )`,
+                backgroundColor:
+                  job.status !== "Not moving forward"
+                    ? `rgba(${job.color.r}, ${job.color.g}, ${job.color.b}, ${job.color.a})`
+                    : "darkgrey",
               }}
             >
               <div className={classes.cardContent}>

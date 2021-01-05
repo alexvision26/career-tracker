@@ -3,13 +3,6 @@ import {
     LOGIN_USER,
     LOG_OUT,
     UPDATE_USER,
-    DELETE_USER,
-    CREATE_JOB,
-    UPDATe_JOB,
-    DELETE_JOB,
-    CREATE_CONTACT,
-    UPDATE_CONTACT,
-    DELETE_CONTACT
 } from '../actions/index';
 
 export const initialState = {
@@ -73,6 +66,12 @@ export const userReducer = (state = initialState, action) => {
             return {
                 ...state,
                 job_board: [...state.job_board, action.payload]
+            }
+
+        case "UPDATE_JOB":
+            return {
+                ...state,
+                job_board: action.payload
             }
         default:
             return state
