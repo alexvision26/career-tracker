@@ -148,11 +148,16 @@ export default function LoginForm(props) {
         })
         .catch((err) => {
           console.log(err);
+          const es = err.response ? err.response.status : 500;
+          const em = {
+            500: "Error connecting to server. Try again later.",
+            401: "Username or password is invalid.",
+          };
           setIsError({
             ...isError,
             msg: {
               ...isError.msg,
-              network: "Error connecting to server. Try again later",
+              network: em[es],
               details: err,
             },
           });
@@ -178,7 +183,7 @@ export default function LoginForm(props) {
     <ThemeProvider theme={theme}>
       {isError.msg.network && (
         <Alert severity="error" className={classes.fieldError}>
-          <strong>Error connecting to the server. Please try again.</strong>
+          <strong>{isError.msg.network}</strong>
           {/* <AlertTitle>Invalid email address.</AlertTitle> */}
         </Alert>
       )}
