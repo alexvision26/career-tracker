@@ -1,24 +1,19 @@
 import "./App.scss";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Redirect,
   Route,
   Switch,
-  useHistory,
 } from "react-router-dom";
 import SignUpForm from "./components/SignupForm";
 import LoginForm from "./components/LoginForm";
 import Dashboard from "./components/Dashboard";
-import PrivateRouter from "./utils/PrivateRoute";
-
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import PrivateRoute from "./utils/PrivateRoute";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { axiosWithAuth } from "./utils/axiosWithAuth";
-// import Button from '@material-ui/core/Button';
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -32,7 +27,6 @@ function App() {
   const [open, setOpen] = useState(false);
   const [logoutSuccess, setLogoutSuccess] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const history = useHistory();
 
   const dispatch = useDispatch();
 
@@ -92,8 +86,6 @@ function App() {
         Open success
       </Button> */}
 
-      {/* {isLoggedIn ? <div>LOGGED IN</div> : null} */}
-
       <div className="App">
         <Switch>
           <Redirect exact from="/" to="/register" />
@@ -135,8 +127,6 @@ function App() {
             path="/dashboard"
             component={Dashboard}
           />
-
-          {/* <Dashboard handleLogoutClick={handleLogoutClick} /> */}
         </Switch>
 
         {/* SUCCESS MESSAGE */}

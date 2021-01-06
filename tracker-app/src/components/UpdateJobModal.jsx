@@ -1,7 +1,4 @@
-import React, { useEffect } from "react";
-import { useState } from "react";
-import Container from "@material-ui/core/Container";
-// import { SketchPicker } from "react-color";
+import React, { useEffect, useState } from "react";
 import reactCSS from "reactcss";
 import {
   AssignmentInd as AssignmentIndIcon,
@@ -19,6 +16,7 @@ import {
   TextField,
   Modal,
   Button,
+  Container,
 } from "@material-ui/core";
 import { modalStyles } from "../styles/modalStyles";
 import { useDispatch, useSelector } from "react-redux";
@@ -42,7 +40,6 @@ function UpdateJobModal(props) {
   jobToUpdate = jobToUpdate[0];
 
   const [updateJob, setUpdateJob] = useState(jobToUpdate);
-  const [showColorPicker, setShowColorPicker] = useState(false);
 
   useEffect(() => {
     setUpdateJob(jobToUpdate);
@@ -97,70 +94,6 @@ function UpdateJobModal(props) {
       });
   };
 
-  //   const handleColorClick = () => {
-  //     setShowColorPicker(!showColorPicker);
-  //   };
-
-  //   const handleColorClose = () => {
-  //     setShowColorPicker(false);
-  //   };
-
-  //   const handleColorChange = (color) => {
-  //     setCreateNewJob({
-  //       ...createNewJob,
-  //       color: color.rgb,
-  //     });
-  //   };
-
-  //   const handleStatusChange = (event) => {
-  //     setCreateNewJob({
-  //       ...createNewJob,
-  //       status: event.target.value,
-  //     });
-  //   };
-
-  const styles = reactCSS({
-    default: {
-      color: {
-        height: "35px",
-        borderRadius: "2px",
-        // background: `rgba(${jobToUpdate.color.r}, ${jobToUpdate.color.g}, ${jobToUpdate.color.b}, ${jobToUpdate.color.a})`,
-      },
-      swatch: {
-        padding: "5px",
-        background: "#fff",
-        borderRadius: "1px",
-        boxShadow: "0 0 0 1px rgba(0,0,0,.1)",
-        display: "inline-block",
-        cursor: "pointer",
-        width: "39%",
-        minWidth: "200px",
-        margin: "1% 0 2%",
-      },
-      popover: {
-        position: "absolute",
-        zIndex: "2",
-      },
-      cover: {
-        position: "fixed",
-        top: "0px",
-        right: "0px",
-        bottom: "0px",
-        left: "0px",
-      },
-      header: {
-        // backgroundColor: `rgba(${jobToUpdate.color.r}, ${jobToUpdate.color.g}, ${jobToUpdate.color.b}, ${jobToUpdate.color.a})`,
-        color: "white",
-      },
-      updateHeader: {
-        width: "100%",
-        minHeight: "20%",
-        margin: 0,
-        padding: "5%",
-      },
-    },
-  });
-
   const body = (
     <div className={classes.paper}>
       {jobToUpdate && (
@@ -186,12 +119,7 @@ function UpdateJobModal(props) {
                 backgroundColor: `rgba(${jobToUpdate.color.r}, ${jobToUpdate.color.g}, ${jobToUpdate.color.b}, ${jobToUpdate.color.a})`,
               }}
             ></Grid>
-            <form
-              className={classes.form}
-              //   onSubmit={handleSubmit}
-              id="add-job-form"
-              noValidate
-            >
+            <form className={classes.form} id="add-job-form" noValidate>
               <Grid
                 spacing={12}
                 container
@@ -290,19 +218,6 @@ function UpdateJobModal(props) {
                   </Select>
                 </FormControl>
               </Grid>
-
-              {/* <div style={styles.swatch} onClick={handleColorClick}>
-            <div style={styles.color} />
-          </div>
-          {showColorPicker ? (
-            <div style={styles.popover}>
-              <div style={styles.cover} onClick={handleColorClose} />
-              <SketchPicker
-                color={createNewJob.color}
-                onChange={handleColorChange}
-              />
-            </div>
-          ) : null} */}
 
               <TextField
                 className={classes.desc}

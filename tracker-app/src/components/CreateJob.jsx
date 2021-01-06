@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
-import Container from "@material-ui/core/Container";
 import { SketchPicker } from "react-color";
 import reactCSS from "reactcss";
 import {
@@ -11,10 +9,9 @@ import {
   TextField,
   Modal,
   Button,
+  Container,
 } from "@material-ui/core";
-
 import { axiosWithAuth } from "../utils/axiosWithAuth";
-
 import { modalStyles } from "../styles/modalStyles";
 import { useDispatch } from "react-redux";
 
@@ -35,11 +32,8 @@ function CreateJob(props) {
       a: "1",
     },
   });
-  // const [jobColor, setJobColor] = useState({});
   const [showColorPicker, setShowColorPicker] = useState(false);
-
   const classes = modalStyles();
-  // getModalStyle is not a pure function, we roll the style only on the first render
   const { newJob, setNewJob } = props;
 
   const handleInput = (info) => {
@@ -82,13 +76,6 @@ function CreateJob(props) {
     setCreateNewJob({
       ...createNewJob,
       color: color.rgb,
-    });
-  };
-
-  const handleStatusChange = (event) => {
-    setCreateNewJob({
-      ...createNewJob,
-      status: event.target.value,
     });
   };
 
@@ -135,12 +122,7 @@ function CreateJob(props) {
       </div>
 
       <Container component="main" maxWidth="lg">
-        <form
-          className={classes.form}
-          //   onSubmit={handleSubmit}
-          id="add-job-form"
-          noValidate
-        >
+        <form className={classes.form} id="add-job-form" noValidate>
           <Grid
             spacing={12}
             container
@@ -212,9 +194,8 @@ function CreateJob(props) {
                 native
                 required
                 onChange={handleInput}
-                // name="status"
+                name="status"
                 value={createNewJob.status}
-                onChange={handleStatusChange}
                 label="Status"
                 inputProps={{
                   name: "status",

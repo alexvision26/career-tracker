@@ -1,21 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { theme } from "../styles/theme";
-import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import TextField from "@material-ui/core/TextField";
-import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
+import {
+  Button,
+  CssBaseline,
+  TextField,
+  Link,
+  Grid,
+  Container,
+  CircularProgress,
+} from "@material-ui/core";
 import { makeStyles, ThemeProvider } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
 import clsx from "clsx";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import { Alert } from "@material-ui/lab";
 import axios from "axios";
-
 import { useDispatch } from "react-redux";
-import { userLogin } from "../actions/index";
 import { useHistory } from "react-router-dom";
-import { useEffect } from "react";
 import { loginErrorCheck } from "./errorHandle";
 
 const useStyles = makeStyles((theme) => ({
@@ -184,7 +183,6 @@ export default function LoginForm(props) {
       {isError.msg.network && (
         <Alert severity="error" className={classes.fieldError}>
           <strong>{isError.msg.network}</strong>
-          {/* <AlertTitle>Invalid email address.</AlertTitle> */}
         </Alert>
       )}
       <Container component="main" maxWidth="xs">
