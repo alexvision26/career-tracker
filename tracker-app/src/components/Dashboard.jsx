@@ -1,36 +1,37 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { makeStyles, ThemeProvider } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import Box from "@material-ui/core/Box";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  IconButton,
+  Tabs,
+  Tab,
+  Box,
+  Drawer,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+} from "@material-ui/core";
 import PermContactCalendarIcon from "@material-ui/icons/PermContactCalendar";
-import WorkIcon from "@material-ui/icons/Work";
-import LocalActivityIcon from "@material-ui/icons/LocalActivity";
-import CreateIcon from "@material-ui/icons/Create";
-import Drawer from "@material-ui/core/Drawer";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import SettingsIcon from "@material-ui/icons/Settings";
-import SecurityIcon from "@material-ui/icons/Security";
+import {
+  Work as WorkIcon,
+  LocalActivity as LocalActivityIcon,
+  Create as CreateIcon,
+  Settings as SettingsIcon,
+  Security as SecurityIcon,
+  ExitToApp as ExitToAppIcon,
+  Receipt as ReceiptIcon,
+  Menu as MenuIcon,
+} from "@material-ui/icons";
 import clsx from "clsx";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import ReceiptIcon from "@material-ui/icons/Receipt";
 import CreateJob from "./CreateJob";
 import { theme } from "../styles/theme";
-import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-
 import JobBoard from "./JobBoard";
-import { useEffect } from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -87,7 +88,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box p={3} style={{ backgroundColor: "white", height: "auto" }}>
-          <Typography>{children}</Typography>
+          {children}
         </Box>
       )}
     </div>
@@ -109,7 +110,6 @@ function a11yProps(index) {
 
 const Dashboard = (props) => {
   const classes = useStyles();
-  const dispatch = useDispatch();
   const history = useHistory();
   const [value, setValue] = useState(0);
   const [state, setState] = useState({

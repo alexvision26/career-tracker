@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card, Container, Grid, makeStyles } from "@material-ui/core";
+import { Card, Grid, makeStyles } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { axiosWithAuth } from "../utils/axiosWithAuth";
 import {
@@ -11,8 +11,8 @@ import {
   SupervisedUserCircle as SupervisedUserCircleIcon,
 } from "@material-ui/icons";
 import UpdateJobModal from "./UpdateJobModal";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { v4 as uuid } from "uuid";
+// import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+// import { v4 as uuid } from "uuid";
 
 const useStyles = makeStyles((theme) => ({
   boardContainer: {
@@ -111,11 +111,9 @@ function JobBoard() {
   };
 
   const handleDeleteJob = (jobId) => {
-    console.log("deleting... ", jobId);
     axiosWithAuth()
       .delete(`jobs/${userId}/job`, { data: { _id: jobId } })
       .then((res) => {
-        // reloadJobBoard();
         dispatch({ type: "DELETE_JOB", payload: jobId });
       })
       .catch((err) => {
@@ -180,11 +178,6 @@ function JobBoard() {
       });
   };
 
-  // <h3 className={classes.title}>{col}</h3>
-  // {jobSorter(getJobs, col)}
-
-  // const [columns, setColumns] = useState(statusColumns);
-
   return (
     <>
       <UpdateJobModal
@@ -194,7 +187,7 @@ function JobBoard() {
         handleDeleteJob={handleDeleteJob}
       />
 
-      <Container maxWidth>
+      <div style={{ width: "100%" }}>
         <Grid
           container
           justify="space-evenly"
@@ -225,7 +218,7 @@ function JobBoard() {
             {jobSorter(getJobs, "Not moving forward")}
           </Grid>
         </Grid>
-      </Container>
+      </div>
     </>
   );
 }

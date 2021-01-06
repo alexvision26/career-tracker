@@ -6,7 +6,7 @@ export function registerErrorCheck(cred) {
       e,
       p,
       err = false;
-    let msg = {};
+    // let msg = {};
 
     if (cred.user.fname === "") {
       f = true;

@@ -1,10 +1,3 @@
-import {
-    CREATE_USER,
-    LOGIN_USER,
-    LOG_OUT,
-    UPDATE_USER,
-} from '../actions/index';
-
 export const initialState = {
     user_id: "",
     user_info: {},
@@ -30,19 +23,19 @@ export const userReducer = (state = initialState, action) => {
                 isLoggedIn: false
             }
 
-        case CREATE_USER:
+        case "CREATE_USER":
             return {
                 ...state,
             }
         
-        case LOGIN_USER:
+        case "LOGIN_USER":
             return {
                 ...state,
                 user_info: action.payload,
                 isLoggedIn: true
             }
 
-        case UPDATE_USER:
+        case "UPDATE_USER":
             return {
                 ...state,
             }
