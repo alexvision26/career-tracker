@@ -11,7 +11,8 @@ import {
   SupervisedUserCircle as SupervisedUserCircleIcon,
 } from "@material-ui/icons";
 import UpdateJobModal from "./UpdateJobModal";
-import { DragDropContext } from "react-beautiful-dnd";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { v4 as uuid } from "uuid";
 
 const useStyles = makeStyles((theme) => ({
   boardContainer: {
@@ -82,7 +83,6 @@ function JobBoard() {
   const [updateJobModal, setUpdateJobModal] = useState(false);
   const userId = localStorage.getItem("user");
   const getJobs = useSelector((state) => state.job_board);
-
   const [currEdit, setCurrEdit] = useState("");
 
   const handleUpdateOpen = (id) => {
@@ -158,7 +158,10 @@ function JobBoard() {
                 handleUpdateOpen(job._id);
               }}
               style={{
-                backgroundColor: `rgba(${job.color.r}, ${job.color.g}, ${job.color.b}, ${job.color.a} )`,
+                backgroundColor:
+                  job.status !== "Not moving forward"
+                    ? `rgba(${job.color.r}, ${job.color.g}, ${job.color.b}, ${job.color.a})`
+                    : "darkgrey",
               }}
             >
               <div className={classes.cardContent}>
@@ -176,6 +179,11 @@ function JobBoard() {
         );
       });
   };
+
+  // <h3 className={classes.title}>{col}</h3>
+  // {jobSorter(getJobs, col)}
+
+  // const [columns, setColumns] = useState(statusColumns);
 
   return (
     <>
