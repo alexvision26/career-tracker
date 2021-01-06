@@ -27,6 +27,7 @@ const contactSchema = mongoose.Schema({
 const jobSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     created: { type: Date, default: Date.now },
+    updated: { type: Date, default: Date.now },
     authorId: { type: String, required: true },
     jobTitle: { type: String, required: true },
     company: { type: String, required: true },
