@@ -72,7 +72,6 @@ function UpdateJobModal(props) {
       [e.target.name]: e.target.value,
       updated: Date.now,
     });
-    console.log(updateJob);
   };
 
   const handleUpdate = () => {

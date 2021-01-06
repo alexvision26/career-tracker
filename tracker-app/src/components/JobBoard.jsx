@@ -102,7 +102,6 @@ function JobBoard() {
     axiosWithAuth()
       .get(`jobs/${userId}`)
       .then((res) => {
-        console.log(res.data.jobs);
         dispatch({ type: "GET_JOBS", payload: res.data.jobs });
       })
       .catch((err) => {
