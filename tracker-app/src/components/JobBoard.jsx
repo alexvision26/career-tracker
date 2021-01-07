@@ -150,7 +150,7 @@ function JobBoard() {
         return (
           <>
             <Card
-              key={job.jobTitle}
+              key={job._id}
               className={classes.cardContainer}
               onClick={() => {
                 handleUpdateOpen(job._id);
@@ -162,16 +162,16 @@ function JobBoard() {
                     : "darkgrey",
               }}
             >
-              <div className={classes.cardContent}>
+              <div className={classes.cardContent} key={job._id}>
                 {renderIcon()}
-                <div className={classes.cardTitleCont}>
+                <div className={classes.cardTitleCont} key={job._id}>
                   <h3 style={{ margin: 0 }} className={classes.cardTitle}>
                     {job.jobTitle}
                   </h3>
                   <p style={{ margin: 0, fontSize: ".9rem" }}>{job.company}</p>
                 </div>
               </div>
-              {formatDate(job.created, cat)}
+              {formatDate(job.updated, cat)}
             </Card>
           </>
         );

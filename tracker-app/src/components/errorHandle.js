@@ -92,3 +92,79 @@ export function registerErrorCheck(cred) {
     msg: {}
   });
   }
+
+  // CREATE JOB ERROR HANDLING
+
+export function createJobErrorCheck(cred) {
+  let { job, setError } = cred;
+  let t, c, l, u, s, d, err = false;
+
+  if (job.jobTitle === "") {
+    t = true
+  } else {
+    t = false
+  }
+
+  if (job.company === "") {
+    c = true
+  } else {
+    c = false
+  }
+
+  if (job.location === "") {
+    l = true
+  } else {
+    l = false
+  }
+
+  if (job.postUrl === "") {
+    u = true
+  } else {
+    u = false
+  }
+
+  if (job.status === "") {
+    s = true
+  } else {
+    s = false
+  }
+
+  if (job.desc === "") {
+    d = true
+  } else {
+    d = false
+  }
+
+  if (t || c || l || u || s || d) {
+    err = true
+  } else {
+    err = false
+  }
+
+  setError({
+    title: t,
+    company: c,
+    location: l,
+    url: u,
+    status: s,
+    desc: d,
+    error: err,
+    msg: {},
+  })
+}
+
+// export function updateJobErrorCheck (cred) {
+//   let { job, setError } = cred;
+//   let desc, err = false;
+
+//   if (job.desc === "") {
+//     desc = true
+//   } else {
+//     desc = false
+//   }
+
+//   setError({
+//     desc: desc,
+//     error: err
+//   })
+// }

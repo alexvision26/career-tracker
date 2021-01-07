@@ -3,7 +3,6 @@ const helmet = require("helmet");
 const cors = require("cors");
 const bodyParser = require("body-parser")
 const mongoose = require("mongoose");
-// const { MongoClient } = require("mongodb");
 
 const usersRouter = require("./routes/users-route");
 const contactsRouter = require("./routes/contacts-route");
