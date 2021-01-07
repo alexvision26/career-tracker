@@ -243,6 +243,7 @@ const Dashboard = (props) => {
                   {...a11yProps(1)}
                 />
                 <Tab
+                  disabled
                   label="Activities"
                   icon={<LocalActivityIcon />}
                   {...a11yProps(2)}

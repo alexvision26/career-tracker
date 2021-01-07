@@ -32,6 +32,10 @@ function CreateJob(props) {
       a: "1",
     },
   });
+  const [isError, setIsError] = useState({
+    error: false,
+    msg: {},
+  });
   const [showColorPicker, setShowColorPicker] = useState(false);
   const classes = modalStyles();
   const { newJob, setNewJob } = props;

@@ -41,6 +41,7 @@ router.get("/:id/job", (req, res) => {
 
 // ADD A NEW JOB CARD
 router.post("/", (req, res) => {
+    const getDate = Date.now()
     const job = new Job({
         _id: new mongoose.Types.ObjectId,
         authorId: req.body.authorId,
@@ -51,7 +52,8 @@ router.post("/", (req, res) => {
         postUrl: req.body.postUrl,
         discovered: req.body.discovered,
         status: req.body.status,
-        color: req.body.color
+        color: req.body.color,
+        updated: getDate
     })
 
     if (!req.body.authorId || !req.body.jobTitle) {

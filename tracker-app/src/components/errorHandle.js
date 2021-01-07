@@ -92,3 +92,9 @@ export function registerErrorCheck(cred) {
     msg: {}
   });
   }
+
+  // CREATE JOB ERROR HANDLING
+
+export function createJobErrorCheck(cred) {
+  
+}

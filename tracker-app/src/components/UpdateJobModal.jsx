@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import reactCSS from "reactcss";
 import {
   AssignmentInd as AssignmentIndIcon,
   BubbleChart as BubbleChartIcon,
@@ -67,11 +66,14 @@ function UpdateJobModal(props) {
   };
 
   const handleInput = (e) => {
+    const newDate = new Date(Date.now());
+
     setUpdateJob({
       ...updateJob,
       [e.target.name]: e.target.value,
-      updated: Date.now,
+      updated: newDate,
     });
+    console.log(newDate);
     console.log(updateJob);
   };
 
@@ -139,7 +141,6 @@ function UpdateJobModal(props) {
                   fullWidth
                   id="jobTitle"
                   label="Job Title"
-                  //   onChange={handleInput}
                 />
 
                 <TextField
@@ -153,7 +154,6 @@ function UpdateJobModal(props) {
                   fullWidth
                   id="company"
                   label="Company"
-                  //   onChange={handleInput}
                 />
 
                 <TextField

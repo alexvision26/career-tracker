@@ -236,12 +236,9 @@ export default function LoginForm(props) {
               size="large"
               variant="contained"
               color="primary"
-              // className={classes.submit}
               style={{ margin: "35px 0" }}
-              // className={classes.submit}
               className={buttonClassname}
               disabled={loading}
-              // onClick={handleButtonClick}
             >
               Login
               {loading && (
