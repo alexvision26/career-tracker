@@ -51,7 +51,8 @@ router.post("/", (req, res) => {
         postUrl: req.body.postUrl,
         discovered: req.body.discovered,
         status: req.body.status,
-        color: req.body.color
+        color: req.body.color,
+        updated: Date.now()
     })
 
     if (!req.body.authorId || !req.body.jobTitle) {

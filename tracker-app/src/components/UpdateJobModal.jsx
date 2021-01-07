@@ -75,6 +75,15 @@ function UpdateJobModal(props) {
   };
 
   const handleUpdate = () => {
+    const updateDate = Date.now();
+
+    setUpdateJob({
+      ...updateJob,
+      updated: updateDate,
+    });
+
+    console.log(updateJob);
+
     axiosWithAuth()
       .put(`jobs/${localStorage.getItem("user")}`, updateJob)
       .then((res) => {
@@ -138,7 +147,6 @@ function UpdateJobModal(props) {
                   fullWidth
                   id="jobTitle"
                   label="Job Title"
-                  //   onChange={handleInput}
                 />
 
                 <TextField
@@ -152,7 +160,6 @@ function UpdateJobModal(props) {
                   fullWidth
                   id="company"
                   label="Company"
-                  //   onChange={handleInput}
                 />
 
                 <TextField
