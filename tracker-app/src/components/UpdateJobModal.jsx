@@ -52,7 +52,7 @@ function UpdateJobModal(props) {
   };
 
   useEffect(() => {
-    if (updateJob.desc.length < 5) {
+    if (updateJob && updateJob.desc.length < 5) {
       setIsError(true);
     } else {
       setIsError(false);
