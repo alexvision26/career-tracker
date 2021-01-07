@@ -134,5 +134,14 @@ export const modalStyles = makeStyles((theme) => ({
         width: 60,
         height: 60,
         padding: "0 7% 0 3%"
-    }
+    },
+    errorMain: {
+      color: "red",
+      fontSize: ".7rem",
+      textAlign: "center",
+      margin: "0",
+      padding: "0",
+      width: "100%",
+      paddingTop: "25px",
+    },
   }));

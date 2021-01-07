@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SketchPicker } from "react-color";
 import reactCSS from "reactcss";
 import {
@@ -14,6 +14,7 @@ import {
 import { axiosWithAuth } from "../utils/axiosWithAuth";
 import { modalStyles } from "../styles/modalStyles";
 import { useDispatch } from "react-redux";
+import { createJobErrorCheck } from "./errorHandle";
 
 function CreateJob(props) {
   const dispatch = useDispatch();
@@ -32,7 +33,17 @@ function CreateJob(props) {
       a: "1",
     },
   });
+  const [success, setSuccess] = useState({
+    isSub: false,
+    success: false,
+  });
   const [isError, setIsError] = useState({
+    title: false,
+    company: false,
+    location: false,
+    url: false,
+    status: false,
+    desc: false,
     error: false,
     msg: {},
   });
@@ -47,21 +58,33 @@ function CreateJob(props) {
     });
   };
 
+  useEffect(() => {
+    createJobErrorCheck({ job: createNewJob, setError: setIsError });
+  }, [createNewJob]);
+
   const handleCreate = (e) => {
     e.preventDefault();
 
-    console.log(createNewJob);
+    setSuccess({
+      isSub: true,
+    });
+    // createJobErrorCheck({ job: createNewJob, setError: setIsError });
 
-    axiosWithAuth()
-      .post("/jobs", createNewJob)
-      .then((res) => {
-        console.log(res.data.job);
-        dispatch({ type: "CREATE_JOB", payload: res.data.job });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    setNewJob(false);
+    console.log(isError);
+    if (isError.error) {
+      console.log("Error creating now job.");
+    } else if (!isError.error) {
+      axiosWithAuth()
+        .post("/jobs", createNewJob)
+        .then((res) => {
+          console.log(res.data.job);
+          dispatch({ type: "CREATE_JOB", payload: res.data.job });
+          setNewJob(false);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
   const handleClose = () => {
@@ -145,6 +168,7 @@ function CreateJob(props) {
               id="jobTitle"
               label="Job Title"
               onChange={handleInput}
+              error={success.isSub && isError.title ? true : false}
             />
 
             <TextField
@@ -157,6 +181,7 @@ function CreateJob(props) {
               id="company"
               label="Company"
               onChange={handleInput}
+              error={success.isSub && isError.company ? true : false}
             />
 
             <TextField
@@ -168,6 +193,7 @@ function CreateJob(props) {
               id="location"
               label="Location"
               onChange={handleInput}
+              error={success.isSub && isError.location ? true : false}
             />
 
             <TextField
@@ -178,6 +204,7 @@ function CreateJob(props) {
               id="postUrl"
               label="Post URL"
               onChange={handleInput}
+              // error={success.isSub && isError.url ? true : false}
             />
 
             <TextField
@@ -198,6 +225,7 @@ function CreateJob(props) {
                 native
                 required
                 onChange={handleInput}
+                error={success.isSub && isError.status ? true : false}
                 name="status"
                 value={createNewJob.status}
                 label="Status"
@@ -206,7 +234,7 @@ function CreateJob(props) {
                   id: "outlined-status-native-simple",
                 }}
               >
-                <option aria-label="None" value="" />
+                {/* <option aria-label="None" value="" /> */}
                 <option value="Interested">Interested</option>
                 <option value="Applied">Applied</option>
                 <option value="Reached out">Reached out</option>
@@ -243,7 +271,16 @@ function CreateJob(props) {
             id="description"
             label="Description"
             onChange={handleInput}
+            error={success.isSub && isError.desc ? true : false}
           />
+
+          <Grid item xs={12}>
+            {success.isSub && isError.error && (
+              <h6 className={classes.errorMain}>
+                Please complete all fields marked with *
+              </h6>
+            )}
+          </Grid>
 
           <Grid className={classes.buttons}>
             <Button

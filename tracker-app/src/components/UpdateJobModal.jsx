@@ -20,6 +20,7 @@ import {
 import { modalStyles } from "../styles/modalStyles";
 import { useDispatch, useSelector } from "react-redux";
 import { axiosWithAuth } from "../utils/axiosWithAuth";
+// import { updateJobErrorCheck } from "./errorHandle";
 
 function UpdateJobModal(props) {
   const classes = modalStyles();
@@ -30,6 +31,8 @@ function UpdateJobModal(props) {
     currEdit,
     handleDeleteJob,
   } = props;
+
+  let [isError, setIsError] = useState(false);
 
   let jobToUpdate = useSelector((state) => {
     return state.job_board.filter((j) => {
@@ -47,6 +50,14 @@ function UpdateJobModal(props) {
   const handleClose = () => {
     setUpdateJobModal(false);
   };
+
+  useEffect(() => {
+    if (updateJob.desc.length < 5) {
+      setIsError(true);
+    } else {
+      setIsError(false);
+    }
+  }, [updateJob]);
 
   const renderIcon = () => {
     switch (jobToUpdate.status) {
@@ -78,22 +89,26 @@ function UpdateJobModal(props) {
   };
 
   const handleUpdate = () => {
-    axiosWithAuth()
-      .put(`jobs/${localStorage.getItem("user")}`, updateJob)
-      .then((res) => {
-        axiosWithAuth()
-          .get(`jobs/${localStorage.getItem("user")}`)
-          .then((result) => {
-            dispatch({ type: "UPDATE_JOB", payload: result.data.jobs });
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-        handleClose();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (isError) {
+      console.log("Description required");
+    } else if (!isError) {
+      axiosWithAuth()
+        .put(`jobs/${localStorage.getItem("user")}`, updateJob)
+        .then((res) => {
+          axiosWithAuth()
+            .get(`jobs/${localStorage.getItem("user")}`)
+            .then((result) => {
+              dispatch({ type: "UPDATE_JOB", payload: result.data.jobs });
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+          handleClose();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
   const body = (
@@ -162,6 +177,7 @@ function UpdateJobModal(props) {
                   name="location"
                   variant="outlined"
                   defaultValue={jobToUpdate.location}
+                  disabled
                   required
                   id="location"
                   label="Location"
@@ -206,7 +222,7 @@ function UpdateJobModal(props) {
                       id: "outlined-status-native-simple",
                     }}
                   >
-                    <option aria-label="None" value="" />
+                    {/* <option aria-label="None" value="" /> */}
                     <option value="Interested">Interested</option>
                     <option value="Applied">Applied</option>
                     <option value="Reached out">Reached out</option>
@@ -226,13 +242,14 @@ function UpdateJobModal(props) {
                 variant="outlined"
                 required
                 multiline
-                value={jobToUpdate.desc}
+                defaultValue={jobToUpdate.desc}
                 rows={8}
                 rowsMax={10}
                 fullWidth
                 id="description"
                 label="Description"
                 onChange={handleInput}
+                error={isError ? true : false}
               />
 
               <Grid className={classes.buttonsUpdate}>
